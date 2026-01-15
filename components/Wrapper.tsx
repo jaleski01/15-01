@@ -3,21 +3,21 @@ import { BaseProps, COLORS } from '../types';
 
 interface WrapperProps extends BaseProps {
   centerContent?: boolean;
+  noPadding?: boolean; // Nova prop para remover padding padrão
 }
 
 /**
  * Wrapper Component
  * Container principal seguro.
  * 
- * ATUALIZAÇÃO: Usa h-[100dvh] em vez de min-h-screen.
- * Isso força o container a ter o tamanho exato da tela, impedindo
- * que o layout "vaze" e crie barras de rolagem duplas ou empurre
- * o menu inferior para fora da visão.
+ * ATUALIZAÇÃO: Adicionado suporte a 'noPadding' para telas que gerenciam
+ * seu próprio scroll e espaçamento (como Dashboard), garantindo full-width real.
  */
 export const Wrapper: React.FC<WrapperProps> = ({ 
   children, 
   className = '', 
-  centerContent = false 
+  centerContent = false,
+  noPadding = false
 }) => {
   return (
     <div 
@@ -31,7 +31,12 @@ export const Wrapper: React.FC<WrapperProps> = ({
         color: COLORS.TextPrimary 
       }}
     >
-      <div className="flex-1 w-full max-w-md mx-auto px-6 py-4 flex flex-col h-full overflow-hidden">
+      <div 
+        className={`
+          flex-1 w-full max-w-md mx-auto flex flex-col h-full overflow-hidden
+          ${!noPadding ? 'px-6 py-4' : ''} 
+        `}
+      >
         {children}
       </div>
     </div>
