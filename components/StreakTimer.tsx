@@ -31,7 +31,6 @@ export const StreakTimer: React.FC<StreakTimerProps> = ({ startDate }) => {
       const difference = now - start;
 
       if (difference < 0) {
-        // Future date case (shouldn't happen for a streak, but safe to handle)
         setTime({ days: '00', hours: '00', minutes: '00', seconds: '00' });
         setIsLoaded(true);
         return;
@@ -53,17 +52,13 @@ export const StreakTimer: React.FC<StreakTimerProps> = ({ startDate }) => {
       setIsLoaded(true);
     };
 
-    // Initial call
     updateTimer();
-
-    // Interval
     const intervalId = setInterval(updateTimer, 1000);
 
     return () => clearInterval(intervalId);
   }, [startDate]);
 
   if (!startDate || !isLoaded) {
-    // Skeleton loader
     return (
       <div className="flex justify-between items-center w-full animate-pulse gap-4">
         {[1, 2, 3, 4].map((i) => (
@@ -77,17 +72,21 @@ export const StreakTimer: React.FC<StreakTimerProps> = ({ startDate }) => {
   }
 
   const TimeUnit = ({ value, label }: { value: string, label: string }) => (
-    <div className="flex flex-col items-center flex-1">
-      {/* Number Display */}
+    <div className="flex flex-col items-center flex-1 min-w-[50px]">
+      {/* 
+        AJUSTE RESPONSIVO:
+        text-3xl para telas pequenas
+        text-5xl para telas maiores (sm)
+        Isso impede que números grandes (ex: 100 DIAS) quebrem o layout
+      */}
       <div 
-        className="text-4xl sm:text-5xl font-bold font-mono tracking-tighter text-white drop-shadow-lg"
+        className="text-3xl sm:text-5xl font-bold font-mono tracking-tighter text-white drop-shadow-lg leading-none"
       >
         {value}
       </div>
       
-      {/* Label */}
       <div 
-        className="text-[10px] sm:text-xs font-bold uppercase tracking-widest mt-1"
+        className="text-[9px] sm:text-xs font-bold uppercase tracking-widest mt-2"
         style={{ color: COLORS.TextSecondary }}
       >
         {label}
@@ -97,14 +96,17 @@ export const StreakTimer: React.FC<StreakTimerProps> = ({ startDate }) => {
 
   return (
     <div className="w-full py-4">
-      <div className="flex flex-row justify-between items-start gap-2 sm:gap-4">
+      {/* 
+         Flex container configurado para distribuir espaço igualmente 
+         sem forçar larguras fixas que causam overflow 
+      */}
+      <div className="flex flex-row justify-between items-center w-full">
         <TimeUnit value={time.days} label="DIAS" />
-        {/* Separator visual aid (optional, keeping clean for now as requested) */}
-        <div className="h-10 w-px bg-white/10 self-center hidden sm:block"></div>
+        <div className="h-8 w-px bg-white/10 mx-1 hidden sm:block"></div>
         <TimeUnit value={time.hours} label="HRS" />
-        <div className="h-10 w-px bg-white/10 self-center hidden sm:block"></div>
+        <div className="h-8 w-px bg-white/10 mx-1 hidden sm:block"></div>
         <TimeUnit value={time.minutes} label="MIN" />
-        <div className="h-10 w-px bg-white/10 self-center hidden sm:block"></div>
+        <div className="h-8 w-px bg-white/10 mx-1 hidden sm:block"></div>
         <TimeUnit value={time.seconds} label="SEG" />
       </div>
     </div>

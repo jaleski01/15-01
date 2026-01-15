@@ -27,8 +27,8 @@ export const NeuroDebugCard: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full my-5">
-      {/* Header */}
-      <div className="flex items-center gap-2 mb-3 px-1">
+      {/* Header - Alinhado com o pai (sem padding extra horizontal) */}
+      <div className="flex items-center gap-2 mb-3">
         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
         <h3 
           className="text-[10px] font-bold uppercase tracking-widest opacity-80"
@@ -38,7 +38,10 @@ export const NeuroDebugCard: React.FC = () => {
         </h3>
       </div>
 
-      {/* Horizontal Scroll Chips */}
+      {/* Horizontal Scroll Chips 
+          - w-full: Ocupa 100% do pai
+          - paddingHorizontal: 0 (o pai DashboardScreen já dá o respiro)
+      */}
       <div className="w-full overflow-x-auto pb-2 scrollbar-hide flex gap-3">
         {DEBUG_DATA.map((item) => (
           <button

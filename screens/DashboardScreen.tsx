@@ -123,24 +123,23 @@ export const DashboardScreen: React.FC = () => {
   return (
     <Wrapper>
       {/* 
-        MAIN SCROLL VIEW
-        Matches spec: contentContainerStyle paddingBottom: 120 (approx 30 * 4px = 120px)
-        px-5 (20px) padding horizontal
-        pt-5 (20px) padding top
+        MAIN SCROLL VIEW (Container Principal)
+        - flex-1: Ocupa todo espaço vertical disponível
+        - w-full: Garante largura 100%
+        - px-5: Padding horizontal de ~20px (Respiro lateral seguro)
+        - pb-32: Espaço extra no final para o Hub não cobrir conteúdo
       */}
       <div 
-        className="h-full overflow-y-auto scrollbar-hide"
-        style={{ 
-          paddingTop: '20px',
-          paddingBottom: '120px', 
-          paddingLeft: '0px', 
-          paddingRight: '0px'
+        className="flex-1 w-full overflow-y-auto scrollbar-hide px-5 pt-6 pb-32"
+        style={{
+          // Garante que o conteúdo flua naturalmente sem larguras fixas
+          maxWidth: '100%',
         }}
       >
         
         {/* 1. STREAK TIMER */}
         <header className="flex flex-col w-full mb-6">
-          <div className="flex justify-between items-center mb-2 px-1">
+          <div className="flex justify-between items-center mb-2">
             <div className="flex items-center gap-2">
                <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse"></div>
                <span className="text-xs font-bold tracking-wider uppercase" style={{ color: COLORS.TextSecondary }}>
@@ -151,16 +150,16 @@ export const DashboardScreen: React.FC = () => {
           <StreakTimer startDate={profile?.current_streak_start} />
         </header>
 
-        {/* Optional: Personality/Mission Summary (Compact) */}
-        <div className="mb-6 px-1">
+        {/* Personality/Mission Summary */}
+        <div className="w-full mb-6">
           <h3 className="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70" style={{ color: personality.color }}>
             {personality.title}
           </h3>
-          <div className="flex justify-between items-end border-b border-[#1C2533] pb-4">
+          <div className="flex justify-between items-end border-b border-[#1C2533] pb-4 w-full">
              <p className="text-sm font-medium leading-relaxed text-white max-w-[70%]">
                "{personality.text}"
              </p>
-             <div className="text-right">
+             <div className="text-right flex-shrink-0">
                 <span className="text-[10px] uppercase text-gray-500 block">Missão</span>
                 <span className="text-xs font-bold text-white">{mission.title}</span>
              </div>
@@ -168,14 +167,15 @@ export const DashboardScreen: React.FC = () => {
         </div>
 
         {/* 2. NEURO DEBUG (GATILHOS) */}
+        {/* Container interno já possui width 100% */}
         <NeuroDebugCard />
 
-        {/* TRIGGER BUTTON (New) */}
-        <div className="w-full px-1 mb-6">
+        {/* TRIGGER BUTTON */}
+        <div className="w-full mb-6">
           <Button 
             variant="outline"
             onClick={() => setIsTriggerModalOpen(true)}
-            className="flex items-center justify-center gap-2 border-dashed border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white"
+            className="flex items-center justify-center gap-2 border-dashed border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white w-full"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -185,20 +185,20 @@ export const DashboardScreen: React.FC = () => {
         </div>
 
         {/* 3. SECTION TITLE */}
-        <div className="mt-2 mb-3 px-1">
+        <div className="mt-2 mb-3 w-full">
           <h3 className="text-xs font-bold uppercase tracking-widest text-white">
             Rituais de Poder
           </h3>
         </div>
 
-        {/* 4. DAILY HABITS (Vertical List) */}
+        {/* 4. DAILY HABITS */}
         <DailyHabits />
 
         {/* 5. SOS BUTTON */}
-        <div className="mt-[30px]">
+        <div className="mt-8 w-full">
           <Button 
             variant="danger" 
-            className="h-16 text-lg tracking-widest shadow-[0_0_20px_rgba(211,47,47,0.4)] animate-pulse hover:animate-none"
+            className="h-16 text-lg tracking-widest shadow-[0_0_20px_rgba(211,47,47,0.4)] animate-pulse hover:animate-none w-full"
             onClick={handleSosClick}
           >
             S.O.S EMERGÊNCIA
