@@ -227,182 +227,188 @@ export const ProgressScreen: React.FC = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="flex flex-col h-full pt-4 pb-20 overflow-y-auto scrollbar-hide">
+    <Wrapper noPadding>
+      {/* 
+        CONTAINER DE SCROLL VERTICAL (Viewport)
+        flex-1, h-full: Garante que ocupe a altura disponível
+        overflow-y-auto: Habilita o scroll vertical seguro
+        bg-black: Fundo consistente
+      */}
+      <div className="flex-1 w-full h-full overflow-y-auto scrollbar-hide bg-black">
         
-        {/* HEADER */}
-        <div className="flex flex-col mb-6 px-1">
-           <h1 className="text-xl font-bold text-white tracking-wide">
-             Evolução & Análise
-           </h1>
-           <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
-             Sua jornada dia após dia
-           </p>
-        </div>
-
-        {/* RANGE SELECTOR (TABS) */}
-        <div className="flex p-1 rounded-xl mb-6 bg-[#1F2937]/30 border border-[#1C2533]">
-          {RANGES.map((range) => (
-            <button
-              key={range}
-              onClick={() => setSelectedRange(range)}
-              className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
-                selectedRange === range 
-                  ? 'bg-[#007AFF] text-white shadow-lg' 
-                  : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              {range}D
-            </button>
-          ))}
-        </div>
-
-        {/* KPI CARDS */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden">
-            <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Média</span>
-            <span className={`text-3xl font-bold z-10 ${stats.average >= 80 ? 'text-[#10B981]' : 'text-white'}`}>
-              {stats.average}%
-            </span>
-            <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#007AFF]/10 rounded-full blur-xl"></div>
-          </div>
+        {/* 
+          CONTAINER DE CONTEÚDO
+          w-full: Largura total
+          px-5: Padding horizontal de 20px (Safe Area visual)
+          pb-32: Espaço para o menu inferior
+        */}
+        <div className="w-full max-w-full px-5 pt-6 pb-32 flex flex-col">
           
-          <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden">
-            <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Dias Perfeitos</span>
-            <span className="text-3xl font-bold text-white z-10">
-              {stats.perfectDays}
-            </span>
-             <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#10B981]/10 rounded-full blur-xl"></div>
+          {/* HEADER */}
+          <div className="flex flex-col mb-6">
+             <h1 className="text-xl font-bold text-white tracking-wide">
+               Evolução & Análise
+             </h1>
+             <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
+               Sua jornada dia após dia
+             </p>
           </div>
-        </div>
 
-        {/* CHART CONTAINER */}
-        <div className="flex-1 w-full flex flex-col mb-10">
-          <h3 className="text-xs font-bold text-gray-400 mb-4 px-1 uppercase tracking-wider">
-            Linha do Tempo
-          </h3>
-
-          {loading ? (
-             <div className="w-full h-[200px] flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-[#007AFF] border-t-transparent rounded-full animate-spin"></div>
-             </div>
-          ) : chartData.length === 0 ? (
-            <div className="w-full h-[200px] flex flex-col items-center justify-center text-center opacity-50 border border-dashed border-gray-800 rounded-xl">
-               <p className="text-sm font-bold text-white mb-2">Jornada Iniciada</p>
-               <p className="text-xs text-gray-400">Complete seus hábitos hoje para ver o D1.</p>
-            </div>
-          ) : (
-            <div 
-              ref={scrollRef}
-              className="w-full overflow-x-auto pb-4 scrollbar-hide"
-            >
-              {/* 
-                CORREÇÃO VISUAL DO GRÁFICO 
-                Container com altura fixa (200px)
-                Items alinhados na base (items-end)
-              */}
-              <div 
-                className="flex items-end px-2 min-w-full gap-3 border-b border-[#1C2533] relative"
-                style={{ height: '200px' }} 
+          {/* RANGE SELECTOR (TABS) */}
+          <div className="w-full flex p-1 rounded-xl mb-6 bg-[#1F2937]/30 border border-[#1C2533]">
+            {RANGES.map((range) => (
+              <button
+                key={range}
+                onClick={() => setSelectedRange(range)}
+                className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
+                  selectedRange === range 
+                    ? 'bg-[#007AFF] text-white shadow-lg' 
+                    : 'text-gray-500 hover:text-gray-300'
+                }`}
               >
-                {/* Background Grid Lines (Optional) */}
-                <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10 w-full h-full z-0">
-                  <div className="w-full h-px bg-white"></div>
-                  <div className="w-full h-px bg-white"></div>
-                  <div className="w-full h-px bg-white"></div>
-                  <div className="w-full h-px bg-white"></div>
-                </div>
-
-                {chartData.map((item, index) => {
-                  const hasData = item.value > 0;
-                  
-                  // Ensure accurate 0-100 percentage based on the data processed in fetchHistory
-                  const barHeight = `${item.value}%`; 
-                  
-                  return (
-                    <div key={index} className="flex flex-col items-center gap-2 group cursor-pointer z-10 h-full justify-end">
-                      <div className="relative flex items-end h-full w-full justify-center">
-                        {/* THE BAR */}
-                        <div 
-                          className={`rounded-t-sm transition-all duration-500 ease-out relative ${getBarWidthClass()}`}
-                          style={{ 
-                            height: hasData ? barHeight : '4px',
-                            backgroundColor: hasData ? COLORS.Primary : '#1F2937',
-                            minHeight: '4px',
-                          }}
-                        >
-                          {/* Glow effect for 100% days */}
-                          {item.value === 100 && (
-                              <div className="absolute inset-0 bg-[#007AFF] blur-[6px] opacity-50"></div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <span className="text-[9px] font-bold text-gray-500">
-                        {item.label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* --- RAIO-X DOS GATILHOS (NEW SECTION) --- */}
-        <div className="w-full flex flex-col">
-          <div className="flex items-center gap-2 mb-4 px-1">
-            <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            <h3 className="text-xs font-bold uppercase tracking-widest text-white">
-              Raio-X dos Gatilhos
-            </h3>
+                {range}D
+              </button>
+            ))}
           </div>
 
-          {!loading && triggerInsight && triggerInsight.totalLogs > 0 ? (
-            <div className="flex flex-col gap-4">
-              {/* Main Alert Card */}
-              <div className="p-5 rounded-2xl bg-gradient-to-br from-[#1F1212] to-[#000000] border border-red-900/30 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-3 opacity-10">
-                  <svg className="w-24 h-24 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                </div>
-                
-                <h4 className="text-xs font-bold text-red-500 uppercase tracking-widest mb-2">
-                  Seu Maior Inimigo Atual
-                </h4>
-                
-                <p className="text-lg font-medium text-white leading-relaxed z-10 relative">
-                  Nos últimos {selectedRange} dias, <span className="text-red-400 font-bold">{triggerInsight.topEmotion?.percentage}%</span> das vontades foram causadas por <span className="text-red-400 font-bold">{triggerInsight.topEmotion?.name}</span>, principalmente quando: <span className="text-white border-b border-red-500/50 pb-0.5">{triggerInsight.topContext?.name}</span>.
-                </p>
-              </div>
+          {/* KPI CARDS - Grid Responsivo */}
+          <div className="grid grid-cols-2 gap-4 mb-8 w-full">
+            <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden w-full">
+              <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Média</span>
+              <span className={`text-3xl font-bold z-10 ${stats.average >= 80 ? 'text-[#10B981]' : 'text-white'}`}>
+                {stats.average}%
+              </span>
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#007AFF]/10 rounded-full blur-xl"></div>
+            </div>
+            
+            <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden w-full">
+              <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Dias Perfeitos</span>
+              <span className="text-3xl font-bold text-white z-10">
+                {stats.perfectDays}
+              </span>
+               <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#10B981]/10 rounded-full blur-xl"></div>
+            </div>
+          </div>
 
-              {/* Ranking List */}
-              <div className="bg-[#0B101A] rounded-xl border border-[#1C2533] p-4">
-                <h5 className="text-[10px] uppercase text-gray-500 font-bold mb-3">Top Gatilhos Recorrentes</h5>
-                <div className="flex flex-col gap-3">
-                  {triggerInsight.ranking.map((item, idx) => (
-                    <div key={item.name} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-bold text-gray-600 w-4">#{idx + 1}</span>
-                        <span className="text-sm text-white font-medium">{item.name}</span>
+          {/* CHART CONTAINER */}
+          <div className="w-full flex flex-col mb-10">
+            <h3 className="text-xs font-bold text-gray-400 mb-4 uppercase tracking-wider">
+              Linha do Tempo
+            </h3>
+
+            {loading ? (
+               <div className="w-full h-[200px] flex items-center justify-center">
+                  <div className="w-8 h-8 border-4 border-[#007AFF] border-t-transparent rounded-full animate-spin"></div>
+               </div>
+            ) : chartData.length === 0 ? (
+              <div className="w-full h-[200px] flex flex-col items-center justify-center text-center opacity-50 border border-dashed border-gray-800 rounded-xl">
+                 <p className="text-sm font-bold text-white mb-2">Jornada Iniciada</p>
+                 <p className="text-xs text-gray-400">Complete seus hábitos hoje para ver o D1.</p>
+              </div>
+            ) : (
+              // Scroll Horizontal contido no pai
+              <div 
+                ref={scrollRef}
+                className="w-full overflow-x-auto pb-4 scrollbar-hide"
+              >
+                <div 
+                  className="flex items-end min-w-full gap-3 border-b border-[#1C2533] relative px-2"
+                  style={{ height: '200px' }} 
+                >
+                  {/* Background Grid Lines */}
+                  <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10 w-full h-full z-0">
+                    <div className="w-full h-px bg-white"></div>
+                    <div className="w-full h-px bg-white"></div>
+                    <div className="w-full h-px bg-white"></div>
+                    <div className="w-full h-px bg-white"></div>
+                  </div>
+
+                  {chartData.map((item, index) => {
+                    const hasData = item.value > 0;
+                    const barHeight = `${item.value}%`; 
+                    
+                    return (
+                      <div key={index} className="flex flex-col items-center gap-2 group cursor-pointer z-10 h-full justify-end flex-shrink-0">
+                        <div className="relative flex items-end h-full w-full justify-center">
+                          <div 
+                            className={`rounded-t-sm transition-all duration-500 ease-out relative ${getBarWidthClass()}`}
+                            style={{ 
+                              height: hasData ? barHeight : '4px',
+                              backgroundColor: hasData ? COLORS.Primary : '#1F2937',
+                              minHeight: '4px',
+                            }}
+                          >
+                            {item.value === 100 && (
+                                <div className="absolute inset-0 bg-[#007AFF] blur-[6px] opacity-50"></div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <span className="text-[9px] font-bold text-gray-500">
+                          {item.label}
+                        </span>
                       </div>
-                      <span className="text-xs text-gray-400 bg-[#1F2937] px-2 py-1 rounded-md">
-                        {item.count}x
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
-            </div>
-          ) : (
-            <div className="w-full p-6 rounded-xl border border-dashed border-[#1C2533] flex flex-col items-center justify-center text-center">
-              <p className="text-sm text-gray-400 mb-1">Nenhum gatilho registrado.</p>
-              <p className="text-xs text-gray-600">Use o botão "Registrar Gatilho" na Home quando sentir vontade.</p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
+          {/* RAIO-X DOS GATILHOS */}
+          <div className="w-full flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white">
+                Raio-X dos Gatilhos
+              </h3>
+            </div>
+
+            {!loading && triggerInsight && triggerInsight.totalLogs > 0 ? (
+              <div className="flex flex-col gap-4 w-full">
+                {/* Main Alert Card */}
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-[#1F1212] to-[#000000] border border-red-900/30 relative overflow-hidden w-full">
+                  <div className="absolute top-0 right-0 p-3 opacity-10">
+                    <svg className="w-24 h-24 text-red-600" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  </div>
+                  
+                  <h4 className="text-xs font-bold text-red-500 uppercase tracking-widest mb-2">
+                    Seu Maior Inimigo Atual
+                  </h4>
+                  
+                  <p className="text-lg font-medium text-white leading-relaxed z-10 relative">
+                    Nos últimos {selectedRange} dias, <span className="text-red-400 font-bold">{triggerInsight.topEmotion?.percentage}%</span> das vontades foram causadas por <span className="text-red-400 font-bold">{triggerInsight.topEmotion?.name}</span>, principalmente quando: <span className="text-white border-b border-red-500/50 pb-0.5">{triggerInsight.topContext?.name}</span>.
+                  </p>
+                </div>
+
+                {/* Ranking List */}
+                <div className="bg-[#0B101A] rounded-xl border border-[#1C2533] p-4 w-full">
+                  <h5 className="text-[10px] uppercase text-gray-500 font-bold mb-3">Top Gatilhos Recorrentes</h5>
+                  <div className="flex flex-col gap-3 w-full">
+                    {triggerInsight.ranking.map((item, idx) => (
+                      <div key={item.name} className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-gray-600 w-4">#{idx + 1}</span>
+                          <span className="text-sm text-white font-medium">{item.name}</span>
+                        </div>
+                        <span className="text-xs text-gray-400 bg-[#1F2937] px-2 py-1 rounded-md">
+                          {item.count}x
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="w-full p-6 rounded-xl border border-dashed border-[#1C2533] flex flex-col items-center justify-center text-center">
+                <p className="text-sm text-gray-400 mb-1">Nenhum gatilho registrado.</p>
+                <p className="text-xs text-gray-600">Use o botão "Registrar Gatilho" na Home quando sentir vontade.</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </Wrapper>
   );

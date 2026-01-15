@@ -44,65 +44,78 @@ export const LearningScreen: React.FC = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="flex flex-col h-full pt-4 pb-20 overflow-y-auto scrollbar-hide">
+    <Wrapper noPadding>
+      {/* 
+        CONTAINER DE SCROLL VERTICAL 
+        flex-1, h-full, overflow-y-auto: Estrutura segura de scroll.
+      */}
+      <div className="flex-1 w-full h-full overflow-y-auto scrollbar-hide bg-black">
         
-        {/* Header */}
-        <div className="flex flex-col mb-6 px-1">
-          <h1 className="text-xl font-bold text-white tracking-wide">
-            Base de Conhecimento
-          </h1>
-          <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
-            Neurociência, táticas e ferramentas de bloqueio.
-          </p>
-        </div>
+        {/* 
+          CONTAINER DE CONTEÚDO
+          px-5: Padding lateral de 20px
+          w-full: Garante largura total
+          pb-32: Margem para o menu inferior
+        */}
+        <div className="w-full max-w-full px-5 pt-6 pb-32 flex flex-col">
+          
+          {/* Header */}
+          <div className="flex flex-col mb-6">
+            <h1 className="text-xl font-bold text-white tracking-wide">
+              Base de Conhecimento
+            </h1>
+            <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
+              Neurociência, táticas e ferramentas de bloqueio.
+            </p>
+          </div>
 
-        {/* Modules Grid */}
-        <div className="flex flex-col gap-4">
-          {LEARNING_MODULES.map((module) => (
-            <button
-              key={module.id}
-              onClick={() => setSelectedModule(module)}
-              className="flex items-center w-full p-4 rounded-xl border transition-all active:scale-[0.98] group relative overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${module.gradientStart} 0%, ${module.gradientEnd} 100%)`,
-                borderColor: '#1F2937', 
-              }}
-            >
-              {/* Icon Container */}
-              <div 
-                className="w-12 h-12 rounded-lg flex items-center justify-center bg-black/40 border border-white/5 mr-4 shadow-lg backdrop-blur-sm"
+          {/* Modules Grid - Flex Column with w-full */}
+          <div className="flex flex-col gap-4 w-full">
+            {LEARNING_MODULES.map((module) => (
+              <button
+                key={module.id}
+                onClick={() => setSelectedModule(module)}
+                className="flex items-center w-full p-4 rounded-xl border transition-all active:scale-[0.98] group relative overflow-hidden"
+                style={{
+                  background: `linear-gradient(135deg, ${module.gradientStart} 0%, ${module.gradientEnd} 100%)`,
+                  borderColor: '#1F2937', 
+                }}
               >
-                {getIcon(module.icon, module.accentColor)}
-              </div>
-
-              {/* Text Info */}
-              <div className="flex-1 text-left z-10">
-                <span 
-                  className="text-[9px] font-bold uppercase tracking-widest mb-1 block opacity-80"
-                  style={{ color: module.accentColor }}
+                {/* Icon Container */}
+                <div 
+                  className="w-12 h-12 rounded-lg flex-shrink-0 flex items-center justify-center bg-black/40 border border-white/5 mr-4 shadow-lg backdrop-blur-sm"
                 >
-                  {module.category}
-                </span>
-                <h3 className="text-sm font-bold text-white leading-tight mb-1">
-                  {module.title}
-                </h3>
-                <p 
-                  className="text-[11px] font-medium leading-snug"
-                  style={{ color: '#94A3B8' }}
-                >
-                   {module.subtitle}
-                </p>
-              </div>
+                  {getIcon(module.icon, module.accentColor)}
+                </div>
 
-              {/* Chevron */}
-              <div className="opacity-30 group-hover:opacity-100 transition-opacity z-10 ml-2">
-                <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </button>
-          ))}
+                {/* Text Info */}
+                <div className="flex-1 text-left z-10 min-w-0"> {/* min-w-0 prevents flex items from overflowing */}
+                  <span 
+                    className="text-[9px] font-bold uppercase tracking-widest mb-1 block opacity-80"
+                    style={{ color: module.accentColor }}
+                  >
+                    {module.category}
+                  </span>
+                  <h3 className="text-sm font-bold text-white leading-tight mb-1 truncate">
+                    {module.title}
+                  </h3>
+                  <p 
+                    className="text-[11px] font-medium leading-snug truncate"
+                    style={{ color: '#94A3B8' }}
+                  >
+                     {module.subtitle}
+                  </p>
+                </div>
+
+                {/* Chevron */}
+                <div className="opacity-30 group-hover:opacity-100 transition-opacity z-10 ml-2 flex-shrink-0">
+                  <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
