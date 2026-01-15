@@ -7,8 +7,12 @@ interface WrapperProps extends BaseProps {
 
 /**
  * Wrapper Component
- * Acts as the safe-area and main container for all screens.
- * Enforces the absolute black background and text colors.
+ * Container principal seguro.
+ * 
+ * ATUALIZAÇÃO: Usa h-[100dvh] em vez de min-h-screen.
+ * Isso força o container a ter o tamanho exato da tela, impedindo
+ * que o layout "vaze" e crie barras de rolagem duplas ou empurre
+ * o menu inferior para fora da visão.
  */
 export const Wrapper: React.FC<WrapperProps> = ({ 
   children, 
@@ -18,7 +22,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
   return (
     <div 
       className={`
-        min-h-screen w-full flex flex-col relative overflow-hidden
+        h-[100dvh] w-full flex flex-col relative overflow-hidden
         ${centerContent ? 'justify-center items-center' : ''}
         ${className}
       `}
@@ -27,7 +31,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
         color: COLORS.TextPrimary 
       }}
     >
-      <div className="flex-1 w-full max-w-md mx-auto px-6 py-4 flex flex-col h-full">
+      <div className="flex-1 w-full max-w-md mx-auto px-6 py-4 flex flex-col h-full overflow-hidden">
         {children}
       </div>
     </div>
