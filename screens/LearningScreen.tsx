@@ -1,0 +1,295 @@
+import React, { useState } from 'react';
+import { Wrapper } from '../components/Wrapper';
+import { COLORS } from '../types';
+import { LEARNING_MODULES, LearningModule, LearningStep } from '../data/learningModules';
+
+export const LearningScreen: React.FC = () => {
+  const [selectedModule, setSelectedModule] = useState<LearningModule | null>(null);
+
+  // --- ICONS ---
+  const getIcon = (name: string, color: string) => {
+    switch (name) {
+      case 'shield':
+        return (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        );
+      case 'document':
+        return (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        );
+      case 'mic':
+        return (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+        );
+      case 'play':
+        return (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+      default:
+        return (
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke={color} strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        );
+    }
+  };
+
+  return (
+    <Wrapper>
+      <div className="flex flex-col h-full pt-4 pb-20 overflow-y-auto scrollbar-hide">
+        
+        {/* Header */}
+        <div className="flex flex-col mb-6 px-1">
+          <h1 className="text-xl font-bold text-white tracking-wide">
+            Base de Conhecimento
+          </h1>
+          <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
+            Neurociência, táticas e ferramentas de bloqueio.
+          </p>
+        </div>
+
+        {/* Modules Grid */}
+        <div className="flex flex-col gap-4">
+          {LEARNING_MODULES.map((module) => (
+            <button
+              key={module.id}
+              onClick={() => setSelectedModule(module)}
+              className="flex items-center w-full p-4 rounded-xl border transition-all active:scale-[0.98] group relative overflow-hidden"
+              style={{
+                background: `linear-gradient(135deg, ${module.gradientStart} 0%, ${module.gradientEnd} 100%)`,
+                borderColor: '#1F2937', 
+              }}
+            >
+              {/* Icon Container */}
+              <div 
+                className="w-12 h-12 rounded-lg flex items-center justify-center bg-black/40 border border-white/5 mr-4 shadow-lg backdrop-blur-sm"
+              >
+                {getIcon(module.icon, module.accentColor)}
+              </div>
+
+              {/* Text Info */}
+              <div className="flex-1 text-left z-10">
+                <span 
+                  className="text-[9px] font-bold uppercase tracking-widest mb-1 block opacity-80"
+                  style={{ color: module.accentColor }}
+                >
+                  {module.category}
+                </span>
+                <h3 className="text-sm font-bold text-white leading-tight mb-1">
+                  {module.title}
+                </h3>
+                <p 
+                  className="text-[11px] font-medium leading-snug"
+                  style={{ color: '#94A3B8' }}
+                >
+                   {module.subtitle}
+                </p>
+              </div>
+
+              {/* Chevron */}
+              <div className="opacity-30 group-hover:opacity-100 transition-opacity z-10 ml-2">
+                <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* DETAIL MODAL */}
+      {selectedModule && (
+        <ModuleDetailModal 
+          module={selectedModule} 
+          onClose={() => setSelectedModule(null)} 
+        />
+      )}
+    </Wrapper>
+  );
+};
+
+// --- SUB-COMPONENTS ---
+
+interface ModalProps {
+  module: LearningModule;
+  onClose: () => void;
+}
+
+const ModuleDetailModal: React.FC<ModalProps> = ({ module, onClose }) => {
+  const hasSteps = (module.androidSteps && module.androidSteps.length > 0) || (module.iosSteps && module.iosSteps.length > 0);
+  const [activeTab, setActiveTab] = useState<'ANDROID' | 'IOS'>('ANDROID');
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/95 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Modal Content */}
+      <div className="w-full max-w-lg bg-[#0B101A] border border-[#1C2533] rounded-2xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden animate-fadeIn">
+        
+        {/* Header */}
+        <div className="p-5 border-b border-[#1C2533] flex justify-between items-start bg-[#05090F]">
+          <div>
+            <span 
+              className="text-[10px] font-bold uppercase tracking-widest mb-1 block"
+              style={{ color: module.accentColor }}
+            >
+               {module.category}
+            </span>
+            <h2 className="text-lg font-bold text-white">{module.title}</h2>
+          </div>
+          <button onClick={onClose} className="p-1 rounded-full hover:bg-white/10 transition-colors">
+            <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-5 scrollbar-hide">
+          
+          {/* Intro */}
+          <div 
+             className="p-4 rounded-xl border mb-6"
+             style={{ 
+               backgroundColor: `${module.accentColor}10`, // 10% opacity
+               borderColor: `${module.accentColor}30`     // 30% opacity
+             }}
+          >
+            <p className="text-sm text-gray-300 leading-relaxed">
+              {module.intro}
+            </p>
+          </div>
+
+          {/* Tutorial Steps (Only if Steps exist) */}
+          {hasSteps ? (
+            <>
+              {/* OS Toggle */}
+              <div className="flex bg-[#1F2937] p-1 rounded-xl mb-6">
+                <button 
+                  onClick={() => setActiveTab('ANDROID')}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === 'ANDROID' 
+                      ? 'bg-[#0B101A] text-white shadow-lg border border-[#374151]' 
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  ANDROID
+                </button>
+                <button 
+                  onClick={() => setActiveTab('IOS')}
+                  className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                    activeTab === 'IOS' 
+                      ? 'bg-[#0B101A] text-white shadow-lg border border-[#374151]' 
+                      : 'text-gray-500 hover:text-gray-300'
+                  }`}
+                >
+                  IPHONE (iOS)
+                </button>
+              </div>
+
+              {/* Steps List */}
+              <div className="space-y-4">
+                {(activeTab === 'ANDROID' ? module.androidSteps : module.iosSteps)?.map((step, idx) => (
+                  <StepItem key={idx} step={step} index={idx} accentColor={module.accentColor} />
+                ))}
+              </div>
+            </>
+          ) : (
+             <div className="flex flex-col items-center justify-center py-10 opacity-50">
+                <svg className="w-12 h-12 text-gray-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <p className="text-xs text-gray-500">Conteúdo completo em breve.</p>
+             </div>
+          )}
+
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-[#1C2533] bg-[#0B101A]">
+          <button 
+            onClick={onClose}
+            className="w-full py-3.5 rounded-xl font-bold text-white transition-colors"
+            style={{ backgroundColor: COLORS.Primary }}
+          >
+            Concluir Leitura
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+const StepItem: React.FC<{ step: LearningStep, index: number, accentColor: string }> = ({ step, index, accentColor }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    if (step.copyValue) {
+      navigator.clipboard.writeText(step.copyValue).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
+  };
+
+  return (
+    <div className="flex gap-4">
+      <div className="flex-shrink-0 flex flex-col items-center">
+         <div 
+           className="w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold"
+           style={{ backgroundColor: '#1F2937', borderColor: '#374151', color: accentColor }}
+         >
+           {index + 1}
+         </div>
+         {/* Vertical line connection */}
+         <div className="w-px h-full bg-[#1F2937] my-1 last:hidden"></div>
+      </div>
+      
+      <div className="flex-1 pb-4">
+        {step.isCopyable ? (
+          <button 
+            onClick={handleCopy}
+            className={`
+              w-full text-left p-3 rounded-lg border border-dashed transition-all group relative overflow-hidden
+              ${copied 
+                ? 'bg-green-900/20 border-green-500/50' 
+                : 'bg-[#111827] border-gray-700 hover:border-blue-500'
+              }
+            `}
+          >
+            <p className="font-mono text-sm text-white font-bold tracking-wide break-all">
+              {step.text}
+            </p>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+               {copied ? (
+                 <span className="text-[10px] uppercase font-bold text-green-500 bg-green-900/20 px-2 py-1 rounded">Copiado!</span>
+               ) : (
+                 <svg className="w-4 h-4 text-gray-600 group-hover:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                 </svg>
+               )}
+            </div>
+          </button>
+        ) : (
+          <p className="text-sm text-gray-300 leading-relaxed pt-0.5">
+            {step.text}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
