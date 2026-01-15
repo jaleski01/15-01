@@ -83,108 +83,123 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <Wrapper centerContent>
-      {/* Header / Logo Section */}
-      <div className="w-full mb-12 flex flex-col items-center">
+    // Removido centerContent para permitir controle manual do topo
+    <Wrapper>
+      {/* 
+        Container Principal com Respiro Superior 
+        pt-24 (96px) garante o espaçamento solicitado de ~80-100px
+      */}
+      <div className="w-full pt-24 flex flex-col items-center">
+        
+        {/* Logo Box */}
         <div 
-          className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center"
+          className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center shadow-lg"
           style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
         >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={COLORS.Primary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
-          {isLoginMode ? 'Welcome Back' : 'Create Account'}
+
+        {/* 
+          Título Atualizado: Identidade Visual
+          - font-mono: Estilo cronômetro/técnico
+          - text-4xl: Tamanho grande (36px)
+          - font-bold: Peso
+          - text-white: Cor
+        */}
+        <h1 className="text-4xl font-bold tracking-tighter text-white mb-2 font-mono">
+          DESVICIAR
         </h1>
-        <p className="text-sm" style={{ color: COLORS.TextSecondary }}>
-          {isLoginMode ? 'Enter your credentials to access.' : 'Join us to start your journey.'}
+        
+        <p className="text-sm mb-12" style={{ color: COLORS.TextSecondary }}>
+          {isLoginMode ? 'Acesse o sistema para continuar.' : 'Inicie o protocolo de libertação.'}
         </p>
-      </div>
 
-      {/* Form Section */}
-      <form onSubmit={handleSubmit} className="w-full space-y-5">
-        {error && (
-          <div 
-            className="p-3 rounded-lg text-xs font-medium border"
-            style={{ 
-              backgroundColor: 'rgba(211, 47, 47, 0.1)', 
-              color: '#ff8a80',
-              borderColor: 'rgba(211, 47, 47, 0.3)' 
-            }}
-          >
-            {error}
-          </div>
-        )}
+        {/* Form Section */}
+        <form onSubmit={handleSubmit} className="w-full space-y-5">
+          {error && (
+            <div 
+              className="p-3 rounded-lg text-xs font-medium border"
+              style={{ 
+                backgroundColor: 'rgba(211, 47, 47, 0.1)', 
+                color: '#ff8a80',
+                borderColor: 'rgba(211, 47, 47, 0.3)' 
+              }}
+            >
+              {error}
+            </div>
+          )}
 
-        <div className="space-y-1">
-          <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Email</label>
-          <div 
-            className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
-            style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
-          >
-            <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <input 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@example.com"
-              className="bg-transparent w-full outline-none text-white placeholder-slate-600"
-              required
-            />
+          <div className="space-y-1">
+            <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Email</label>
+            <div 
+              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
+              style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
+            >
+              <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                className="bg-transparent w-full outline-none text-white placeholder-slate-600"
+                required
+              />
+            </div>
           </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Senha</label>
+            <div 
+              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
+              style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
+            >
+              <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="bg-transparent w-full outline-none text-white placeholder-slate-600"
+                required
+                minLength={6}
+              />
+            </div>
+          </div>
+
+          {isLoginMode && (
+            <div className="flex justify-end pt-1">
+              <button type="button" className="text-xs font-medium hover:text-white transition-colors" style={{ color: COLORS.Primary }}>
+                Esqueceu a senha?
+              </button>
+            </div>
+          )}
+
+          <div className="pt-4">
+            <Button type="submit" isLoading={isLoading}>
+              {isLoginMode ? 'Entrar' : 'Criar Conta'}
+            </Button>
+          </div>
+        </form>
+
+        {/* Footer */}
+        <div className="mt-10 text-center">
+          <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
+            {isLoginMode ? "Ainda não tem conta? " : "Já possui conta? "}
+            <span 
+              className="font-bold cursor-pointer hover:underline" 
+              style={{ color: COLORS.Primary }}
+              onClick={toggleMode}
+            >
+              {isLoginMode ? 'Criar agora' : 'Entrar'}
+            </span>
+          </p>
         </div>
-
-        <div className="space-y-1">
-          <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Password</label>
-          <div 
-            className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
-            style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
-          >
-            <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <input 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="bg-transparent w-full outline-none text-white placeholder-slate-600"
-              required
-              minLength={6}
-            />
-          </div>
-        </div>
-
-        {isLoginMode && (
-          <div className="flex justify-end pt-1">
-            <button type="button" className="text-xs font-medium hover:text-white transition-colors" style={{ color: COLORS.Primary }}>
-              Forgot Password?
-            </button>
-          </div>
-        )}
-
-        <div className="pt-4">
-          <Button type="submit" isLoading={isLoading}>
-            {isLoginMode ? 'Sign In' : 'Create Account'}
-          </Button>
-        </div>
-      </form>
-
-      {/* Footer */}
-      <div className="mt-10 text-center">
-        <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
-          {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-          <span 
-            className="font-bold cursor-pointer hover:underline" 
-            style={{ color: COLORS.Primary }}
-            onClick={toggleMode}
-          >
-            {isLoginMode ? 'Create one' : 'Sign in'}
-          </span>
-        </p>
       </div>
     </Wrapper>
   );
