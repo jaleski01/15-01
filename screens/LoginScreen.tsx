@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import * as FirebaseAuth from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore'; // Added imports
 import { auth, db } from '../lib/firebase'; // Added db
 import { Wrapper } from '../components/Wrapper';
@@ -25,7 +25,7 @@ export const LoginScreen: React.FC = () => {
 
       if (isLoginMode) {
         // 1. Sign In
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await FirebaseAuth.signInWithEmailAndPassword(auth, email, password);
         uid = userCredential.user.uid;
 
         // 2. Check Firestore for existing profile
@@ -49,7 +49,7 @@ export const LoginScreen: React.FC = () => {
 
       } else {
         // Registration Flow
-        await createUserWithEmailAndPassword(auth, email, password);
+        await FirebaseAuth.createUserWithEmailAndPassword(auth, email, password);
         // New users always go to Onboarding
         navigate(Routes.ONBOARDING);
       }
