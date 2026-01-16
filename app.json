@@ -32,11 +32,14 @@
       "shortName": "SCAR-D",
       "lang": "pt-BR",
       "display": "standalone",
-      "themeColor": "#000000",
       "backgroundColor": "#000000",
+      "themeColor": "#000000",
       "startUrl": "/",
+      "scope": "/",
+      "orientation": "portrait",
       "meta": {
-        "apple-mobile-web-app-status-bar-style": "black-translucent"
+        "apple-mobile-web-app-status-bar-style": "black-translucent",
+        "apple-mobile-web-app-capable": "yes"
       }
     }
   }
