@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
 import { signOut } from 'firebase/auth';
-import { doc, getDoc, updateDoc } from 'firebase/firestore/lite';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import { COLORS, Routes } from '../types';

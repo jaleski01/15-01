@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore/lite';
+import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken } from 'firebase/messaging';
 
@@ -23,23 +23,22 @@ export const messaging = getMessaging(app);
 
 export const requestForToken = async () => {
   try {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      
-      const registration = await navigator.serviceWorker.ready;
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const registration = await navigator.serviceWorker.ready;
+        const currentToken = await getToken(messaging, { 
+          vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
+          serviceWorkerRegistration: registration 
+        });
 
-      const currentToken = await getToken(messaging, { 
-        vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
-        serviceWorkerRegistration: registration 
-      });
-
-      if (currentToken) {
-        console.log('Token FCM obtido:', currentToken);
-        return currentToken;
+        if (currentToken) {
+          return currentToken;
+        }
       }
     }
   } catch (err) {
-    console.log('Erro ao recuperar token.', err);
+    console.log('Erro token:', err);
   }
   return null;
 };
