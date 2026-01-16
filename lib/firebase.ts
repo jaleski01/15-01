@@ -25,9 +25,15 @@ export const requestForToken = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
+      
+      // CRÍTICO: Reutiliza o SW do PWA para evitar conflito de escopo
+      const registration = await navigator.serviceWorker.ready;
+
       const currentToken = await messaging.getToken({ 
-        vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s' 
+        vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
+        serviceWorkerRegistration: registration 
       });
+
       if (currentToken) {
         console.log('Token FCM obtido:', currentToken);
         return currentToken;

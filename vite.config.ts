@@ -7,10 +7,12 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Estratégia padrão gera o sw.js automaticamente
-      strategies: 'generateSW', 
+      strategies: 'injectManifest', // MUDANÇA CRÍTICA
+      srcDir: 'src',                // Local do novo arquivo
+      filename: 'sw.ts',            // Nome do novo arquivo
       devOptions: {
-        enabled: true // Permite testar o PWA em localhost
+        enabled: true,
+        type: 'module',
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
@@ -25,7 +27,7 @@ export default defineConfig({
         scope: '/',
         icons: [
           {
-            src: '/pwa-192x192.png', // A barra inicial / é importante
+            src: '/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
@@ -41,27 +43,6 @@ export default defineConfig({
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable'
-          }
-        ]
-      },
-      workbox: {
-        // Isso corrige o erro de carregamento em SPA (Single Page App)
-        navigateFallback: '/index.html',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/firestore\.googleapis\.com\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'firestore-data',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
           }
         ]
       }
