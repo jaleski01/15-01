@@ -126,7 +126,8 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-4">
+    // FIX: Z-Index 9999 ensures it's above everything. items-center ensures perfect centering.
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/90 backdrop-blur-sm"
@@ -135,7 +136,8 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
 
       {/* Modal Card */}
       <div 
-        className="w-full max-w-sm bg-[#0B101A] border border-[#1C2533] rounded-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-sm bg-[#0B101A] border border-[#1C2533] rounded-2xl shadow-2xl relative overflow-hidden flex flex-col"
+        style={{ maxHeight: '85vh' }}
       >
         {/* Progress Bar */}
         <div className="w-full h-1 bg-[#1C2533]">
@@ -148,14 +150,14 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-3 right-3 text-gray-500 hover:text-white"
+          className="absolute top-3 right-3 text-gray-500 hover:text-white z-10"
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        <div className="p-6 flex-1 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto scrollbar-hide">
           {renderStepContent()}
         </div>
 
