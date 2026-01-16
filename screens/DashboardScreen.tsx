@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore/lite';
 import { auth, db } from '../lib/firebase';
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';

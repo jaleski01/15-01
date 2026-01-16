@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore/lite';
 import { getAnalytics } from 'firebase/analytics';
 import { getMessaging, getToken } from 'firebase/messaging';
 
@@ -26,7 +26,6 @@ export const requestForToken = async () => {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       
-      // Use serviceWorker.ready instead of register to ensure we use the active SW
       const registration = await navigator.serviceWorker.ready;
 
       const currentToken = await getToken(messaging, { 
@@ -37,14 +36,10 @@ export const requestForToken = async () => {
       if (currentToken) {
         console.log('Token FCM obtido:', currentToken);
         return currentToken;
-      } else {
-        console.log('Nenhum token de registro disponível.');
       }
-    } else {
-      console.log('Permissão de notificação negada.');
     }
   } catch (err) {
-    console.log('Um erro ocorreu ao recuperar o token.', err);
+    console.log('Erro ao recuperar token.', err);
   }
   return null;
 };

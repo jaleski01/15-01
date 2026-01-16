@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore/lite';
 import { requestForToken, auth, db } from '../lib/firebase';
 import { Button } from './Button';
 
