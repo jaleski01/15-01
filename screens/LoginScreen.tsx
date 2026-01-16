@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore'; // Added imports
-import { auth, db } from '../lib/firebase'; // Added db
+import { doc, getDoc } from 'firebase/firestore'; 
+import { auth, db } from '../lib/firebase'; 
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
 import { COLORS, Routes } from '../types';
 
 export const LoginScreen: React.FC = () => {
   const navigate = useNavigate();
-  const [isLoginMode, setIsLoginMode] = useState(true);
+  // Estado fixo para Login, já que o registro é externo
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,43 +20,32 @@ export const LoginScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      let uid;
+      // 1. Sign In
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      
+      // TS Fix: Ensure user object exists before accessing uid
+      if (!userCredential.user) {
+          throw new Error("Erro: Usuário não identificado após login.");
+      }
 
-      if (isLoginMode) {
-        // 1. Sign In
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      const uid = userCredential.user.uid;
+
+      // 2. Check Firestore for existing profile
+      const userDocRef = doc(db, "users", uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
         
-        // TS Fix: Ensure user object exists before accessing uid
-        if (!userCredential.user) {
-            throw new Error("Erro: Usuário não identificado após login.");
-        }
-
-        uid = userCredential.user.uid;
-
-        // 2. Check Firestore for existing profile
-        const userDocRef = doc(db, "users", uid);
-        const userDocSnap = await getDoc(userDocRef);
-
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          
-          // 3. Conditional Navigation based on Onboarding status
-          // Added optional chaining for extra safety
-          if (userData?.onboarding_completed) {
-            navigate(Routes.DASHBOARD);
-          } else {
-            // User exists but hasn't finished setup
-            navigate(Routes.ONBOARDING);
-          }
+        // 3. Conditional Navigation based on Onboarding status
+        if (userData?.onboarding_completed) {
+          navigate(Routes.DASHBOARD);
         } else {
-          // Fallback: User authenticated but no doc found (rare) -> Onboarding
+          // User exists but hasn't finished setup
           navigate(Routes.ONBOARDING);
         }
-
       } else {
-        // Registration Flow
-        await auth.createUserWithEmailAndPassword(email, password);
-        // New users always go to Onboarding
+        // Fallback: User authenticated but no doc found -> Onboarding
         navigate(Routes.ONBOARDING);
       }
 
@@ -67,25 +56,16 @@ export const LoginScreen: React.FC = () => {
       // Map common Firebase errors
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
         errorMessage = "Email ou senha incorretos.";
-      } else if (err.code === 'auth/email-already-in-use') {
-        errorMessage = "Este email já está em uso.";
-      } else if (err.code === 'auth/weak-password') {
-        errorMessage = "A senha deve ter pelo menos 6 caracteres.";
-      } else if (err.code === 'auth/invalid-email') {
-        errorMessage = "O email fornecido não é válido.";
       } else if (err.code === 'auth/too-many-requests') {
         errorMessage = "Muitas tentativas. Tente novamente mais tarde.";
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = "O email fornecido não é válido.";
       }
 
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const toggleMode = () => {
-    setIsLoginMode(!isLoginMode);
-    setError(null);
   };
 
   return (
@@ -109,17 +89,13 @@ export const LoginScreen: React.FC = () => {
 
         {/* 
           Título Atualizado: Identidade Visual
-          - font-mono: Estilo cronômetro/técnico
-          - text-4xl: Tamanho grande (36px)
-          - font-bold: Peso
-          - text-white: Cor
         */}
         <h1 className="text-4xl font-bold tracking-tighter text-white mb-2 font-mono">
           DESVICIAR
         </h1>
         
         <p className="text-sm mb-12" style={{ color: COLORS.TextSecondary }}>
-          {isLoginMode ? 'Acesse o sistema para continuar.' : 'Inicie o protocolo de libertação.'}
+          Acesse o sistema para continuar.
         </p>
 
         {/* Form Section */}
@@ -178,17 +154,15 @@ export const LoginScreen: React.FC = () => {
             </div>
           </div>
 
-          {isLoginMode && (
-            <div className="flex justify-end pt-1">
-              <button type="button" className="text-xs font-medium hover:text-white transition-colors" style={{ color: COLORS.Primary }}>
-                Esqueceu a senha?
-              </button>
-            </div>
-          )}
+          <div className="flex justify-end pt-1">
+            <button type="button" className="text-xs font-medium hover:text-white transition-colors" style={{ color: COLORS.Primary }}>
+              Esqueceu a senha?
+            </button>
+          </div>
 
           <div className="pt-4">
             <Button type="submit" isLoading={isLoading}>
-              {isLoginMode ? 'Entrar' : 'Criar Conta'}
+              Entrar
             </Button>
           </div>
         </form>
@@ -196,14 +170,14 @@ export const LoginScreen: React.FC = () => {
         {/* Footer */}
         <div className="mt-10 text-center">
           <p className="text-xs" style={{ color: COLORS.TextSecondary }}>
-            {isLoginMode ? "Ainda não tem conta? " : "Já possui conta? "}
-            <span 
+            Ainda não tem conta?{" "}
+            <a 
+              href="https://desviciar.com.br"
               className="font-bold cursor-pointer hover:underline" 
               style={{ color: COLORS.Primary }}
-              onClick={toggleMode}
             >
-              {isLoginMode ? 'Criar agora' : 'Entrar'}
-            </span>
+              Criar agora
+            </a>
           </p>
         </div>
       </div>
