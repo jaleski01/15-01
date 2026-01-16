@@ -1,4 +1,14 @@
-import { collection, addDoc, getDoc, doc, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  orderBy, 
+  serverTimestamp, 
+  doc,
+  getDoc
+} from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface TriggerLog {
@@ -39,13 +49,13 @@ export const logTrigger = async (
     const timeSlot = getTimeSlot(now);
     let dayNumber = 1;
 
-    // Passo A: Obter Contexto do Usuário para calcular o dia (Modular)
-    const userRef = doc(db, "users", uid);
-    const userDocSnap = await getDoc(userRef);
+    // Passo A: Obter Contexto do Usuário para calcular o dia
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
 
     if (userDocSnap.exists()) {
       const userData = userDocSnap.data();
-      const streakStart = userData?.current_streak_start;
+      const streakStart = userData.current_streak_start;
 
       if (streakStart) {
         // Handle both Firestore Timestamp and ISO String (from Onboarding)
@@ -72,21 +82,20 @@ export const logTrigger = async (
       console.warn("User profile not found for trigger log. Defaulting to Day 1.");
     }
 
-    // Passo C: Gravação no Firestore (Modular)
+    // Passo C: Gravação no Firestore (Schema Robusto)
     const payload = {
       uid,
       emotion,
       context,
       intensity,
-      timestamp: new Date(), // Replaced serverTimestamp with client time as lite doesn't support transforms
+      timestamp: serverTimestamp(),
       date_string: dateKey, // Para agrupamento/filtro fácil
       day_number: dayNumber, // Vital para o gráfico (D1, D2...)
       time_slot: timeSlot,
       created_at_local: now.toISOString()
     };
 
-    const logsCollectionRef = collection(db, 'users', uid, 'trigger_logs');
-    await addDoc(logsCollectionRef, payload);
+    await addDoc(collection(db, 'users', uid, 'trigger_logs'), payload);
 
   } catch (error) {
     console.error("Critical error saving trigger log:", error);
@@ -99,9 +108,9 @@ export const logTrigger = async (
  */
 export const getTriggers = async (uid: string, startDateStr: string) => {
   try {
-    // Modular Query Syntax
     const logsRef = collection(db, 'users', uid, 'trigger_logs');
     
+    // Query uses date_string (YYYY-MM-DD)
     const q = query(
       logsRef,
       where('date_string', '>=', startDateStr),
@@ -109,7 +118,6 @@ export const getTriggers = async (uid: string, startDateStr: string) => {
     );
 
     const snapshot = await getDocs(q);
-
     const logs: TriggerLog[] = [];
     
     snapshot.forEach(doc => {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { Wrapper } from '../components/Wrapper';
@@ -31,8 +30,7 @@ export const DashboardScreen: React.FC = () => {
       const currentUser = auth.currentUser;
       
       if (!currentUser) {
-        // Modular Syntax for Auth Listener
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
            if (!user) {
              navigate(Routes.LOGIN);
            } else {
@@ -52,7 +50,6 @@ export const DashboardScreen: React.FC = () => {
           setProfile(JSON.parse(cachedProfile));
         }
 
-        // Modular Syntax for Firestore
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
 
