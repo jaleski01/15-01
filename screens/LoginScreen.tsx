@@ -95,7 +95,7 @@ export const LoginScreen: React.FC = () => {
         </h1>
         
         <p className="text-sm mb-12" style={{ color: COLORS.TextSecondary }}>
-          Acesse o sistema para continuar.
+          Acesse o sistema para prosseguir.
         </p>
 
         {/* Form Section */}
