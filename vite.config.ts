@@ -14,7 +14,7 @@ export default defineConfig({
         enabled: true,
         type: 'module',
       },
-      includeAssets: ['favicon.ico', 'pwa-icon.svg'],
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
         name: 'SCAR-D',
         short_name: 'SCAR-D',
@@ -27,21 +27,21 @@ export default defineConfig({
         scope: '/',
         icons: [
           {
-            src: '/pwa-icon.svg',
+            src: '/pwa-192x192.png',
             sizes: '192x192',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'any'
           },
           {
-            src: '/pwa-icon.svg',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'any'
           },
           {
-            src: '/pwa-icon.svg',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'maskable'
           }
         ]
