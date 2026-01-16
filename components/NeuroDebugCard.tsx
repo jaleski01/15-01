@@ -28,7 +28,7 @@ export const NeuroDebugCard: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full my-5">
-      {/* Header - Alinhado com o pai (sem padding extra horizontal) */}
+      {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
         <h3 
@@ -40,23 +40,23 @@ export const NeuroDebugCard: React.FC = () => {
       </div>
 
       {/* 
-          Horizontal Scroll Chips - UI UPDATE: Edge-to-Edge List
-          - w-[calc(100%+2.5rem)]: Compensa a largura extra das margens negativas
-          - -mx-5: Margem negativa para ignorar o padding do pai (px-5) e tocar as bordas
-          - px-5: Padding interno para manter o alinhamento visual inicial
+          UI UPDATE: GRID CENTRALIZADA (Fixed Layout)
+          - flex-wrap: Permite quebra de linha
+          - justify-center: Centraliza o bloco
+          - w-[45%]: Garante 2 itens por linha com gap
       */}
-      <div className="w-[calc(100%+2.5rem)] -mx-5 px-5 overflow-x-auto pb-2 scrollbar-hide flex gap-3">
+      <div className="flex flex-wrap justify-center gap-3 w-full mb-5">
         {DEBUG_DATA.map((item) => (
           <button
             key={item.id}
             onClick={() => handleOpen(item)}
-            className="flex-shrink-0 px-4 py-2.5 rounded-full border transition-all active:scale-95"
+            className="w-[45%] py-4 px-2 rounded-xl border transition-all active:scale-95 flex items-center justify-center shadow-sm"
             style={{ 
               backgroundColor: '#1F2937', 
               borderColor: '#374151',
             }}
           >
-            <span className="text-xs font-bold text-white tracking-wide">
+            <span className="text-xs font-bold text-white tracking-wide text-center">
               {item.trigger}
             </span>
           </button>
