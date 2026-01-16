@@ -9,6 +9,7 @@ import { ProfileScreen } from './screens/ProfileScreen';
 import { SosScreen } from './screens/SosScreen';
 import { TabLayout } from './components/TabLayout'; // Import the layout
 import { Routes as AppRoutes } from './types';
+import { NotificationManager } from './components/NotificationManager';
 
 /**
  * App Component
@@ -41,6 +42,7 @@ const App: React.FC = () => {
 
   return (
     <HashRouter>
+      <NotificationManager />
       <Routes>
         {/* Auth & Onboarding (Full Screen, No Tabs) */}
         <Route path={AppRoutes.LOGIN} element={<LoginScreen />} />
