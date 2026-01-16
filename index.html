@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>High-Stakes App</title>
+    <title>SCAR-D</title>
+    <meta name="description" content="App de Alta Performance e Controle de Hábitos" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       /* Base resets for mobile-like feel */
@@ -39,23 +40,32 @@
         user-select: text;
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
-    "firebase/": "https://esm.sh/firebase@^12.8.0/",
-    "vite": "https://esm.sh/vite@^7.3.1",
-    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
-  }
-}
-</script>
-</head>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+        "firebase/": "https://esm.sh/firebase@^12.8.0/",
+        "vite": "https://esm.sh/vite@^7.3.1",
+        "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+        "react-native": "https://esm.sh/react-native@^0.83.1"
+      }
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
-    <!-- Entry point for the application -->
     <script type="module" src="/index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./firebase-messaging-sw.js')
+            .then(reg => console.log('SW Registrado:', reg.scope))
+            .catch(err => console.log('SW Falhou (Pode ser normal em preview):', err));
+        });
+      }
+    </script>
   </body>
 </html>
