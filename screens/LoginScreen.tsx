@@ -25,6 +25,12 @@ export const LoginScreen: React.FC = () => {
       if (isLoginMode) {
         // 1. Sign In
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        
+        // TS Fix: Ensure user object exists before accessing uid
+        if (!userCredential.user) {
+            throw new Error("Erro: Usuário não identificado após login.");
+        }
+
         uid = userCredential.user.uid;
 
         // 2. Check Firestore for existing profile
@@ -35,7 +41,8 @@ export const LoginScreen: React.FC = () => {
           const userData = userDocSnap.data();
           
           // 3. Conditional Navigation based on Onboarding status
-          if (userData.onboarding_completed) {
+          // Added optional chaining for extra safety
+          if (userData?.onboarding_completed) {
             navigate(Routes.DASHBOARD);
           } else {
             // User exists but hasn't finished setup
