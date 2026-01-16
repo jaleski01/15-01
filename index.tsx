@@ -1,30 +1,17 @@
-import { AppRegistry } from 'react-native';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 
-// Garante que o App ocupe 100% da altura na Web
-const rootStyle = document.createElement('style');
-rootStyle.textContent = `
-  html, body, #root { 
-    height: 100%; 
-    width: 100%; 
-    display: flex; 
-    flex-direction: column; 
-  } 
-  #root > div { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-  }
-`;
-document.head.appendChild(rootStyle);
+const rootElement = document.getElementById('root');
 
-const appName = 'main';
+if (!rootElement) {
+  throw new Error("Could not find root element to mount to");
+}
 
-// Registra o App
-AppRegistry.registerComponent(appName, () => App);
+const root = ReactDOM.createRoot(rootElement);
 
-// Monta no DOM
-AppRegistry.runApplication(appName, {
-  initialProps: {},
-  rootTag: document.getElementById('root'),
-});
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
