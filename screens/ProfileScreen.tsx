@@ -110,9 +110,12 @@ export const ProfileScreen: React.FC = () => {
            </Button>
         </div>
 
-        {/* --- DANGER ZONE --- */}
+        {/* --- DANGER ZONE (UPDATED VISUALS) --- */}
         <div className="w-full mt-auto border-t border-[#1C2533] pt-6">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-red-900 mb-4 opacity-70">
+          <h3 
+            className="text-xs font-bold uppercase tracking-widest mb-4"
+            style={{ color: '#FF3333' }}
+          >
             Zona de Perigo
           </h3>
           
@@ -122,7 +125,12 @@ export const ProfileScreen: React.FC = () => {
 
           <Button 
             onClick={handleRelapseClick}
-            className="border border-red-900/50 text-red-500 hover:bg-red-900/10 hover:border-red-500 hover:text-red-400 transition-colors bg-transparent"
+            className="shadow-[0_0_15px_rgba(220,53,69,0.3)] hover:opacity-90 transition-opacity"
+            style={{ 
+              backgroundColor: '#DC3545', // Vermelho Sólido Intenso
+              color: '#FFFFFF',           // Texto Branco
+              border: 'none'
+            }}
           >
             Registrar Recaída (Zerar Streak)
           </Button>

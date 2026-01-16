@@ -111,12 +111,14 @@ export const DashboardScreen: React.FC = () => {
   // --- RENDER ---
   if (isLoading) {
     return (
-      <Wrapper centerContent>
-        <div className="flex flex-col items-center justify-center">
-          <div className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin mb-4" style={{ borderColor: COLORS.Primary, borderTopColor: 'transparent' }} />
-          <span className="text-xs font-bold tracking-widest animate-pulse" style={{ color: COLORS.TextSecondary }}>CARREGANDO...</span>
-        </div>
-      </Wrapper>
+      // APLICAÇÃO DA CORREÇÃO DE CENTRALIZAÇÃO
+      // Equivalente Web para: flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000000'
+      <div className="flex-1 h-[100dvh] w-full flex flex-col items-center justify-center bg-black">
+        <div className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin mb-4" style={{ borderColor: COLORS.Primary, borderTopColor: 'transparent' }} />
+        <span className="text-xs font-bold tracking-widest animate-pulse" style={{ color: COLORS.TextSecondary }}>
+          CARREGANDO...
+        </span>
+      </div>
     );
   }
 
@@ -170,12 +172,18 @@ export const DashboardScreen: React.FC = () => {
           {/* 2. NEURO DEBUG (GATILHOS) */}
           <NeuroDebugCard />
 
-          {/* TRIGGER BUTTON */}
+          {/* TRIGGER BUTTON (UI UPDATE: Red Dashed Border, Blue Text) */}
           <div className="w-full mb-6">
             <Button 
               variant="outline"
               onClick={() => setIsTriggerModalOpen(true)}
-              className="flex items-center justify-center gap-2 border-dashed border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white w-full"
+              className="flex items-center justify-center gap-2 w-full hover:opacity-80 transition-opacity"
+              style={{ 
+                borderColor: '#FF3333', 
+                borderStyle: 'dashed',
+                borderWidth: '1px',
+                color: COLORS.Primary 
+              }}
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />

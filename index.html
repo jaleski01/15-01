@@ -20,6 +20,24 @@
         -moz-osx-font-smoothing: grayscale;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
+
+      /* 
+         UI SECURITY & NATIVE FEEL
+         Bloqueia seleção de texto e menu de contexto visualmente 
+      */
+      * {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+        -webkit-touch-callout: none; /* iOS Safari */
+      }
+
+      /* Permite seleção apenas onde é estritamente necessário */
+      input, textarea {
+        -webkit-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+      }
     </style>
   <script type="importmap">
 {

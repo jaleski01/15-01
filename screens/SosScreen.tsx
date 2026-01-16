@@ -26,7 +26,8 @@ export const SosScreen: React.FC = () => {
     const runCycle = () => {
       // PHASE 1: INHALE (4 Seconds)
       setPhase('inhale');
-      setScale(1.5); // Grow
+      // Reduced scale from 1.5 to 1.3 to prevent overlapping
+      setScale(1.3); 
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate(100); // Haptic feedback at start
       }
@@ -34,7 +35,7 @@ export const SosScreen: React.FC = () => {
       holdTimeoutRef.current = setTimeout(() => {
         // PHASE 2: HOLD (4 Seconds)
         setPhase('hold');
-        // Scale stays at 1.5
+        // Scale stays at 1.3
         
         exhaleTimeoutRef.current = setTimeout(() => {
           // PHASE 3: EXHALE (4 Seconds)
@@ -61,9 +62,9 @@ export const SosScreen: React.FC = () => {
 
   const getInstructions = () => {
     switch (phase) {
-      case 'inhale': return "INSPIRE...";
-      case 'hold': return "SEGURE...";
-      case 'exhale': return "EXPIRE...";
+      case 'inhale': return "INSPIRE";
+      case 'hold': return "SEGURE"; 
+      case 'exhale': return "EXPIRE";
     }
   };
 
@@ -78,49 +79,56 @@ export const SosScreen: React.FC = () => {
   };
 
   return (
-    <Wrapper centerContent className="bg-black">
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#00E5FF10] via-black to-black pointer-events-none" />
+    // Alterado de bg-black para a cor de Surface (#0B101A) para ser mais calmante
+    <Wrapper centerContent className="bg-[#0B101A]">
+      {/* Background Ambience - Ajustado gradiente para fundir com o azul escuro */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#00E5FF10] via-[#0B101A] to-[#0B101A] pointer-events-none" />
 
-      {/* Main Content Container - Scrollable if needed on small screens */}
-      <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10 overflow-y-auto scrollbar-hide py-10">
+      {/* Título 'S.O.S' REMOVIDO para limpar a interface */}
+
+      {/* Main Content Container */}
+      <div className="flex-1 flex flex-col items-center justify-center w-full relative z-10 overflow-y-auto scrollbar-hide py-20">
         
-        {/* Animated Circle Container */}
-        <div 
-          className="w-56 h-56 sm:w-64 sm:h-64 rounded-full border-2 flex items-center justify-center relative shadow-[0_0_40px_rgba(0,229,255,0.2)] flex-shrink-0"
-          style={{ 
-            borderColor: COLORS.Cyan,
-            ...transitionStyle
-          }}
-        >
-          {/* Inner Glow Core */}
+        {/* Container for Breathing Circle & Text Overlay */}
+        <div className="relative flex items-center justify-center mb-8">
+          
+          {/* Animated Circle Container */}
+          {/* Reduced size: w-40 (160px) */}
           <div 
-            className="w-full h-full rounded-full absolute opacity-20"
-            style={{ backgroundColor: COLORS.Cyan }}
-          />
-        </div>
-
-        {/* Text Instruction - Positioned absolutely to center of circle */}
-        <div className="absolute top-0 left-0 right-0 h-56 sm:h-64 flex items-center justify-center pointer-events-none mt-10">
-           {/* Added margin-top to align with the visual circle center in the flow */}
-          <h1 
-            className="text-2xl font-bold tracking-[0.2em] transition-all duration-500"
-            style={{ color: COLORS.Cyan }}
+            className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-2 flex items-center justify-center relative shadow-[0_0_40px_rgba(0,229,255,0.2)]"
+            style={{ 
+              borderColor: COLORS.Cyan,
+              ...transitionStyle
+            }}
           >
-            {getInstructions()}
-          </h1>
+            {/* Inner Glow Core */}
+            <div 
+              className="w-full h-full rounded-full absolute opacity-20"
+              style={{ backgroundColor: COLORS.Cyan }}
+            />
+          </div>
+
+          {/* Text Instruction - Absolutely Centered over the Circle */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <h1 
+              className="text-xl font-bold tracking-[0.2em] transition-all duration-500"
+              style={{ color: COLORS.Cyan }}
+            >
+              {getInstructions()}
+            </h1>
+          </div>
         </div>
 
-        {/* Instruction Text - Adjusted Margin as requested */}
+        {/* Instruction Text */}
         <p 
-          className="text-sm text-center max-w-xs opacity-60 animate-pulse mt-[30px]" 
+          className="text-sm text-center max-w-xs opacity-60 animate-pulse mb-8" 
           style={{ color: COLORS.TextSecondary }}
         >
           Concentre-se apenas no movimento do círculo.
         </p>
 
-        {/* --- NEW SECTION: PRACTICAL TIPS --- */}
-        <div className="w-full max-w-xs mt-10 bg-[#0B101A]/50 border border-[#1C2533] rounded-xl p-5 backdrop-blur-sm animate-fadeIn">
+        {/* --- SECTION: PRACTICAL TIPS --- */}
+        <div className="w-full max-w-xs bg-[#0B101A]/50 border border-[#1C2533] rounded-xl p-5 backdrop-blur-sm animate-fadeIn">
           <h3 className="text-[10px] font-bold uppercase tracking-widest mb-4 text-center text-gray-400">
             PRÓXIMOS PASSOS PARA QUEBRAR O CICLO:
           </h3>

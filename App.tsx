@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginScreen } from './screens/LoginScreen';
 import { OnboardingScreen } from './screens/OnboardingScreen';
@@ -15,8 +15,30 @@ import { Routes as AppRoutes } from './types';
  * 
  * Implements the Navigation Stack using HashRouter.
  * Uses TabLayout to wrap the main app screens.
+ * 
+ * UI SECURITY UPDATE:
+ * Includes global event listeners to prevent context menu (Right Click),
+ * mimicking native app behavior on the web.
  */
 const App: React.FC = () => {
+  
+  useEffect(() => {
+    // Bloqueio do Menu de Contexto (Botão Direito)
+    // Isso dificulta o "Inspecionar Elemento" casual, dando feeling de App Nativo.
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+      return false;
+    };
+
+    // Adiciona o listener no documento inteiro
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    // Cleanup ao desmontar
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
   return (
     <HashRouter>
       <Routes>
