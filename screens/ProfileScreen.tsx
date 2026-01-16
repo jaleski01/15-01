@@ -154,8 +154,9 @@ export const ProfileScreen: React.FC = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="flex flex-col items-center w-full h-full pt-8 pb-32 overflow-y-auto scrollbar-hide">
+    // 'noPadding' remove o padding-6 padrão do wrapper, permitindo controle total aqui.
+    <Wrapper noPadding>
+      <div className="flex flex-col items-center w-full h-full pt-8 px-4 pb-32 overflow-y-auto scrollbar-hide">
         
         {/* --- 1. TOPO: HEADER --- */}
         <div className="flex flex-col items-center mb-8">
