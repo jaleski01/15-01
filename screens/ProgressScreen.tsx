@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'firebase/firestore/lite';
+import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { getTriggers, TriggerLog } from '../services/triggerService';
 import { Wrapper } from '../components/Wrapper';

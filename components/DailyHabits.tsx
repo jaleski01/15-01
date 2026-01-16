@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, setDoc } from 'firebase/firestore/lite';
+import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { COLORS } from '../types';
 

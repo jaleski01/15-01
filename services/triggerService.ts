@@ -1,4 +1,4 @@
-import { collection, addDoc, getDoc, doc, query, where, orderBy, getDocs } from 'firebase/firestore/lite';
+import { collection, addDoc, getDoc, doc, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
 export interface TriggerLog {

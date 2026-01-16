@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc } from 'firebase/firestore/lite';
+import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase'; // Import auth and database
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
