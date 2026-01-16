@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
 import { auth, db } from '../lib/firebase';
-import { doc, updateDoc, increment } from 'firebase/firestore';
+import { doc, updateDoc, increment, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { COLORS, Routes } from '../types';
 
@@ -14,12 +14,65 @@ const MOTIVATIONAL_QUOTES = [
   "O passado é uma lição, não uma sentença de prisão. Foque no agora."
 ];
 
+// Configuração das Patentes (Gamificação)
+const RANKS = [
+  { id: 'sgt', label: 'Sargento', days: 7, icon: 'chevron' },
+  { id: 'lt', label: 'Tenente', days: 15, icon: 'bars' },
+  { id: 'maj', label: 'Major', days: 30, icon: 'star' },
+  { id: 'vet', label: 'Veterano', days: 90, icon: 'shield' },
+];
+
 export const ProfileScreen: React.FC = () => {
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showMotivationModal, setShowMotivationModal] = useState(false);
   const [currentQuote, setCurrentQuote] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [streakDays, setStreakDays] = useState(0);
+
+  // --- 1. LOAD DATA & CALCULATE STREAK ---
+  useEffect(() => {
+    const fetchProfile = async () => {
+      // Tenta pegar do cache local primeiro para performance instantânea
+      const cached = localStorage.getItem('user_profile');
+      if (cached) {
+        const data = JSON.parse(cached);
+        calculateStreak(data.current_streak_start);
+      }
+      
+      // Sincroniza com Firestore
+      if (auth.currentUser) {
+        try {
+          const docRef = doc(db, "users", auth.currentUser.uid);
+          const snap = await getDoc(docRef);
+          if (snap.exists()) {
+             const data = snap.data();
+             calculateStreak(data.current_streak_start);
+             // Atualiza cache
+             localStorage.setItem('user_profile', JSON.stringify(data));
+          }
+        } catch (e) {
+          console.error("Erro ao sincronizar perfil", e);
+        }
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const calculateStreak = (startDateISO: string | undefined) => {
+    if (!startDateISO) {
+      setStreakDays(0);
+      return;
+    }
+    const start = new Date(startDateISO).getTime();
+    const now = new Date().getTime();
+    // Diferença em dias (arredondado para baixo)
+    const diff = Math.max(0, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
+    setStreakDays(diff);
+  };
+
+  // --- 2. ACTIONS ---
 
   const handleLogout = async () => {
     try {
@@ -41,7 +94,7 @@ export const ProfileScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // 1. Update Firestore (Reset Timer & Increment Counter)
+      // 1. Update Firestore
       const userRef = doc(db, "users", user.uid);
       const nowISO = new Date().toISOString();
       
@@ -51,7 +104,7 @@ export const ProfileScreen: React.FC = () => {
         last_relapse_date: nowISO
       });
 
-      // 2. Clear Local Storage for Today's Habits (Hard Reset feeling)
+      // 2. Clear Local Storage for Today's Habits
       const todayKey = new Date().toLocaleDateString('en-CA');
       localStorage.removeItem(`@habits_${todayKey}`);
 
@@ -59,13 +112,14 @@ export const ProfileScreen: React.FC = () => {
       const randomQuote = MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)];
       setCurrentQuote(randomQuote);
       
-      // 4. Update Cache (Optional, ensures dashboard timer updates instantly)
+      // 4. Update Cache
       const cachedProfile = localStorage.getItem('user_profile');
       if (cachedProfile) {
         const profileData = JSON.parse(cachedProfile);
         profileData.current_streak_start = nowISO;
         localStorage.setItem('user_profile', JSON.stringify(profileData));
       }
+      setStreakDays(0); // Reset visual immediately
 
       // 5. Show Motivation
       setShowConfirmModal(false);
@@ -84,61 +138,154 @@ export const ProfileScreen: React.FC = () => {
     navigate(Routes.DASHBOARD);
   };
 
+  // --- ICONS HELPER ---
+  const getRankIcon = (icon: string) => {
+    switch (icon) {
+      case 'chevron': // Sargento
+        return <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />;
+      case 'bars': // Tenente
+        return <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 10h16M4 14h16" />;
+      case 'star': // Major
+        return <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />;
+      case 'shield': // Veterano
+        return <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />;
+      default: return null;
+    }
+  };
+
   return (
-    <Wrapper centerContent>
-      <div className="flex flex-col items-center gap-4 w-full h-full pt-10 pb-20 overflow-y-auto scrollbar-hide">
+    <Wrapper>
+      <div className="flex flex-col items-center w-full h-full pt-8 pb-32 overflow-y-auto scrollbar-hide">
         
-        {/* Profile Header */}
-        <div className="p-4 rounded-full bg-[#1C2533] mb-2">
-           <svg className="w-8 h-8" style={{ color: COLORS.Primary }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-           </svg>
-        </div>
-        <h1 className="text-xl font-bold text-white tracking-wide mb-6">Meu Perfil</h1>
-        
-        {/* Account Info */}
-        <div className="w-full space-y-4 mb-8">
-           {auth.currentUser?.email && (
-             <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A]">
-                <p className="text-xs text-gray-400 uppercase mb-1">Email</p>
-                <p className="text-white font-medium">{auth.currentUser.email}</p>
+        {/* --- 1. TOPO: HEADER --- */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="p-1 rounded-full border-2 border-[#007AFF] mb-3 shadow-[0_0_15px_rgba(0,122,255,0.4)]">
+             <div className="w-16 h-16 rounded-full bg-[#1C2533] flex items-center justify-center overflow-hidden">
+                {/* User Avatar Placeholder */}
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
              </div>
-           )}
-
-           <Button variant="outline" onClick={handleLogout} className="border-gray-700 text-gray-400 hover:text-white hover:border-white">
-             Sair da Conta
-           </Button>
+          </div>
+          <h1 className="text-xl font-bold text-white tracking-wide">Meu Perfil</h1>
+          <p className="text-xs text-gray-400">
+             {streakDays > 0 ? `${streakDays} Dias Limpos` : 'Dia 0 - O Início'}
+          </p>
         </div>
-
-        {/* --- DANGER ZONE (UPDATED VISUALS) --- */}
-        <div className="w-full mt-auto border-t border-[#1C2533] pt-6">
-          <h3 
-            className="text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ color: '#FF3333' }}
-          >
-            Zona de Perigo
+        
+        {/* --- 2. BLOCO: CONQUISTAS (PATENTES) --- */}
+        <div className="w-full mb-8 animate-fadeIn">
+          <h3 className="text-xs font-bold uppercase tracking-widest mb-4 ml-1" style={{ color: COLORS.TextSecondary }}>
+            Patentes (Progresso)
           </h3>
           
-          <p className="text-xs text-gray-500 mb-4 leading-relaxed">
-            Se você recaiu, seja honesto. Zerar o contador é o primeiro passo para retomar o controle.
+          <div className="grid grid-cols-2 gap-3 w-full">
+            {RANKS.map((rank) => {
+              const isUnlocked = streakDays >= rank.days;
+              
+              return (
+                <div 
+                  key={rank.id}
+                  className={`
+                    relative p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all duration-300
+                    ${isUnlocked 
+                      ? 'bg-[#007AFF]/10 border-[#007AFF]/50 shadow-[0_0_10px_rgba(0,122,255,0.1)]' 
+                      : 'bg-[#1A1A1A] border-[#1C2533] opacity-40 grayscale'
+                    }
+                  `}
+                >
+                  {/* Ícone com Círculo de Fundo */}
+                  <div className={`p-2 rounded-full ${isUnlocked ? 'bg-[#007AFF]/20' : 'bg-[#2a2a2a]'}`}>
+                    <svg className={`w-6 h-6 ${isUnlocked ? 'text-[#007AFF]' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      {getRankIcon(rank.icon)}
+                    </svg>
+                  </div>
+                  
+                  {/* Texto */}
+                  <div className="text-center">
+                    <span className={`text-xs font-bold block ${isUnlocked ? 'text-white' : 'text-gray-500'}`}>
+                      {rank.label}
+                    </span>
+                    <span className="text-[10px] font-mono text-gray-500 mt-0.5 block">
+                      {rank.days} DIAS
+                    </span>
+                  </div>
+
+                  {/* Cadeado se bloqueado */}
+                  {!isUnlocked && (
+                    <div className="absolute top-2 right-2 opacity-50">
+                       <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                       </svg>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* --- 3. BLOCO: ZONA DE PERIGO (CORRIGIDO) --- */}
+        <div className="w-full mb-8 p-5 rounded-2xl border border-red-900/30 bg-gradient-to-br from-[#1A0505] to-[#000000]">
+          <div className="flex items-center gap-2 mb-3">
+             <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-red-500">
+               Zona de Perigo
+             </h3>
+          </div>
+          
+          <p className="text-xs text-gray-400 mb-5 leading-relaxed">
+            Se você caiu, seja honesto. A recuperação exige verdade absoluta. Zere o contador para reiniciar com honra.
           </p>
 
+          {/* 
+              BOTÃO COM ESTILO FORÇADO (OVERRIDE):
+              - style={{ backgroundColor: '#D32F2F', color: '#FFFFFF' }}
+              Isso garante que o botão seja vermelho sangue com texto branco,
+              sobrescrevendo qualquer padrão do componente Button.
+          */}
           <Button 
             onClick={handleRelapseClick}
-            className="shadow-[0_0_15px_rgba(220,53,69,0.3)] hover:opacity-90 transition-opacity"
             style={{ 
-              backgroundColor: '#DC3545', // Vermelho Sólido Intenso
-              color: '#FFFFFF',           // Texto Branco
-              border: 'none'
+              backgroundColor: '#D32F2F', 
+              color: '#FFFFFF'
             }}
+            className="w-full font-bold shadow-lg hover:opacity-90 transition-opacity"
           >
             Registrar Recaída (Zerar Streak)
           </Button>
         </div>
 
+        {/* --- 4. BLOCO: CONTA (RODAPÉ) --- */}
+        <div className="w-full mt-auto pt-6 border-t border-[#1C2533]">
+           <div className="flex flex-col gap-4">
+             {auth.currentUser?.email && (
+               <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#1C2533] bg-[#0B101A]">
+                  <span className="text-xs text-gray-500">Logado como</span>
+                  <span className="text-xs font-medium text-white truncate max-w-[180px]">
+                    {auth.currentUser.email}
+                  </span>
+               </div>
+             )}
+
+             <Button 
+               variant="outline" 
+               onClick={handleLogout} 
+               className="border-gray-800 text-gray-500 hover:text-white hover:border-gray-600 text-xs h-10"
+             >
+               Encerrar Sessão
+             </Button>
+             
+             <p className="text-[10px] text-center text-gray-700 mt-2">
+               Versão 1.0.1 • High-Stakes Protocol
+             </p>
+           </div>
+        </div>
+
       </div>
 
-      {/* --- MODAL 1: CONFIRMATION (Safety Barrier) --- */}
+      {/* --- MODAIS (Mantidos iguais) --- */}
+      {/* --- MODAL 1: CONFIRMATION --- */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-sm bg-[#0B101A] border border-red-900/30 rounded-2xl p-6 shadow-2xl">
@@ -148,9 +295,9 @@ export const ProfileScreen: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Tem certeza?</h2>
+              <h2 className="text-xl font-bold text-white mb-2">Confirmar Recaída?</h2>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Isso vai zerar seu contador atual. Lembre-se: Uma batalha perdida não é o fim da guerra. Você quer mesmo reiniciar?
+                Isso vai zerar seu contador de <span className="text-white font-bold">{streakDays} dias</span>. Lembre-se: Uma batalha perdida não é o fim da guerra.
               </p>
             </div>
             
@@ -164,7 +311,7 @@ export const ProfileScreen: React.FC = () => {
               <button 
                 onClick={executeRelapse}
                 disabled={isLoading}
-                className="flex-1 py-3 rounded-xl font-bold bg-red-600/90 text-white hover:bg-red-600 transition-colors flex items-center justify-center"
+                className="flex-1 py-3 rounded-xl font-bold bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center justify-center"
               >
                 {isLoading ? '...' : 'Sim, recaí'}
               </button>
@@ -173,7 +320,7 @@ export const ProfileScreen: React.FC = () => {
         </div>
       )}
 
-      {/* --- MODAL 2: MOTIVATION (Handshake) --- */}
+      {/* --- MODAL 2: MOTIVATION --- */}
       {showMotivationModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/95 animate-fadeIn">
           <div className="w-full max-w-sm flex flex-col items-center text-center">
