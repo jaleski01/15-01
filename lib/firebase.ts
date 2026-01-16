@@ -1,7 +1,7 @@
-import * as FirebaseApp from 'firebase/app';
-import * as FirebaseAuth from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import * as FirebaseAnalytics from "firebase/analytics";
+import { getAnalytics } from "firebase/analytics";
 
 // Configuração oficial do projeto: desafio-60-15
 const firebaseConfig = {
@@ -15,9 +15,9 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = FirebaseApp.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Initialize Services
-export const auth = FirebaseAuth.getAuth(app);
+export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const analytics = FirebaseAnalytics.getAnalytics(app);
+export const analytics = getAnalytics(app);
