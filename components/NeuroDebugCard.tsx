@@ -21,7 +21,8 @@ export const NeuroDebugCard: React.FC = () => {
   };
 
   const handleFinish = () => {
-    alert("⚡ +10 XP de Sabedoria Adquiridos");
+    // Gamification (XP alert) removed as requested.
+    // The action now seamlessly closes the modal without interruption.
     handleClose();
   };
 
