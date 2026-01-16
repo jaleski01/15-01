@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore'; 
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase'; 
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
@@ -20,19 +21,18 @@ export const LoginScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // 1. Sign In
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      // 1. Sign In (Modular Syntax)
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
-      // TS Fix: Ensure user object exists before accessing uid
       if (!userCredential.user) {
           throw new Error("Erro: Usuário não identificado após login.");
       }
 
       const uid = userCredential.user.uid;
 
-      // 2. Check Firestore for existing profile
-      const userDocRef = doc(db, "users", uid);
-      const userDocSnap = await getDoc(userDocRef);
+      // 2. Check Firestore for existing profile (Modular Syntax)
+      const docRef = doc(db, "users", uid);
+      const userDocSnap = await getDoc(docRef);
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
