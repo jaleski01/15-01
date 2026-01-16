@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore/lite';
 import { auth, db } from '../lib/firebase';
 import { COLORS } from '../types';
 
@@ -38,7 +38,7 @@ export const DailyHabits: React.FC = () => {
     }
   }, [STORAGE_KEY]);
 
-  // 2. Sync to Firestore Function
+  // 2. Sync to Firestore Function (Modular Syntax)
   const syncProgressToDB = async (currentIds: string[]) => {
     const user = auth.currentUser;
     if (!user) return;
@@ -47,9 +47,6 @@ export const DailyHabits: React.FC = () => {
       const total = HABITS.length;
       const count = currentIds.length;
       const percentage = Math.round((count / total) * 100);
-
-      // Path: users/{uid}/daily_history/{YYYY-MM-DD}
-      const historyRef = doc(db, "users", user.uid, "daily_history", todayDate);
 
       const payload = {
         date: todayDate,
@@ -60,8 +57,9 @@ export const DailyHabits: React.FC = () => {
         last_updated: new Date().toISOString()
       };
 
-      // Use setDoc with merge: true to create or update
-      await setDoc(historyRef, payload, { merge: true });
+      // Modular syntax: chaining
+      const dailyHistoryRef = doc(db, "users", user.uid, "daily_history", todayDate);
+      await setDoc(dailyHistoryRef, payload, { merge: true });
       
     } catch (error) {
       console.error("Failed to sync habit progress to Firestore:", error);

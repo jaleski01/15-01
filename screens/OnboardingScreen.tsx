@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { doc, setDoc } from 'firebase/firestore/lite';
 import { auth, db } from '../lib/firebase'; // Import auth and database
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
@@ -86,8 +86,10 @@ export const OnboardingScreen: React.FC = () => {
 
       console.log("Saving User Profile:", userProfile);
 
-      // 4. Save to Firestore
-      await setDoc(doc(db, "users", auth.currentUser.uid), userProfile);
+      // 4. Save to Firestore (Modular Syntax)
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      await setDoc(userRef, userProfile);
+      
       console.log("Firestore Save Success");
 
       // 5. Update Local Cache (for instant UI feedback on Dashboard)

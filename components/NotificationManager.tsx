@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { doc, updateDoc } from 'firebase/firestore/lite';
 import { requestForToken, auth, db } from '../lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
 import { Button } from './Button';
 
 export const NotificationManager: React.FC = () => {
@@ -21,9 +21,9 @@ export const NotificationManager: React.FC = () => {
     const token = await requestForToken();
     
     if (token && auth.currentUser) {
-      // Salva o token no perfil do usuário para podermos enviar pushs depois
+      // Salva o token no perfil do usuário para podermos enviar pushs depois (Modular Syntax)
       try {
-        const userRef = doc(db, 'users', auth.currentUser.uid);
+        const userRef = doc(db, "users", auth.currentUser.uid);
         await updateDoc(userRef, { fcm_token: token });
       } catch (e) {
         console.error("Erro ao salvar token", e);

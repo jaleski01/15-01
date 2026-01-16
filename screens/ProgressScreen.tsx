@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, query, where, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, doc, getDoc } from 'firebase/firestore/lite';
 import { auth, db } from '../lib/firebase';
 import { getTriggers, TriggerLog } from '../services/triggerService';
 import { Wrapper } from '../components/Wrapper';
@@ -60,14 +60,14 @@ export const ProgressScreen: React.FC = () => {
     setLoading(true);
 
     try {
-      // 1. Fetch User Profile to get Start Date
-      const userDocRef = doc(db, "users", user.uid);
-      const userDocSnap = await getDoc(userDocRef);
+      // 1. Fetch User Profile to get Start Date (Modular)
+      const userRef = doc(db, "users", user.uid);
+      const userDocSnap = await getDoc(userRef);
       
       let startDate = new Date(); // Fallback to today
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        if (userData.current_streak_start) {
+        if (userData?.current_streak_start) {
           startDate = new Date(userData.current_streak_start);
         }
       }
@@ -100,14 +100,16 @@ export const ProgressScreen: React.FC = () => {
   };
 
   const fetchHistory = async (uid: string, queryStartDateStr: string, streakStartDate: Date, today: Date) => {
+    // Modular Query Syntax
     const historyRef = collection(db, "users", uid, "daily_history");
     const q = query(
-      historyRef, 
+      historyRef,
       where("date", ">=", queryStartDateStr),
       orderBy("date", "desc")
     );
-
+    
     const querySnapshot = await getDocs(q);
+
     const historyMap = new Map<string, DailyHistory>();
 
     querySnapshot.forEach((doc) => {

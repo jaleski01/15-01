@@ -1,8 +1,8 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/analytics';
-import 'firebase/compat/messaging';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore/lite';
+import { getAnalytics } from 'firebase/analytics';
+import { getMessaging, getToken } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCOX18n01dJ7XNnwKpk3eZliUJ_ZZ8Uyrw",
@@ -14,22 +14,22 @@ const firebaseConfig = {
   measurementId: "G-SZJ7DMD9NC"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-export const auth = app.auth();
-export const db = getFirestore();
-export const analytics = app.analytics();
-export const messaging = firebase.messaging();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const analytics = getAnalytics(app);
+export const messaging = getMessaging(app);
 
 export const requestForToken = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
       
-      // CRÍTICO: Reutiliza o SW do PWA para evitar conflito de escopo
+      // Use serviceWorker.ready instead of register to ensure we use the active SW
       const registration = await navigator.serviceWorker.ready;
 
-      const currentToken = await messaging.getToken({ 
+      const currentToken = await getToken(messaging, { 
         vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
         serviceWorkerRegistration: registration 
       });
