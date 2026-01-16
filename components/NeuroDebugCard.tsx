@@ -39,11 +39,13 @@ export const NeuroDebugCard: React.FC = () => {
         </h3>
       </div>
 
-      {/* Horizontal Scroll Chips 
-          - w-full: Ocupa 100% do pai
-          - paddingHorizontal: 0 (o pai DashboardScreen já dá o respiro)
+      {/* 
+          Horizontal Scroll Chips - UI UPDATE: Edge-to-Edge List
+          - w-[calc(100%+2.5rem)]: Compensa a largura extra das margens negativas
+          - -mx-5: Margem negativa para ignorar o padding do pai (px-5) e tocar as bordas
+          - px-5: Padding interno para manter o alinhamento visual inicial
       */}
-      <div className="w-full overflow-x-auto pb-2 scrollbar-hide flex gap-3">
+      <div className="w-[calc(100%+2.5rem)] -mx-5 px-5 overflow-x-auto pb-2 scrollbar-hide flex gap-3">
         {DEBUG_DATA.map((item) => (
           <button
             key={item.id}
