@@ -171,7 +171,8 @@ const ModuleDetailModal: React.FC<ModalProps> = ({ module, onClose }) => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-5 scrollbar-hide">
+        {/* Added pb-32 to fix last item visibility */}
+        <div className="flex-1 overflow-y-auto p-5 pb-32 scrollbar-hide">
           
           {/* Intro */}
           <div 
@@ -230,18 +231,7 @@ const ModuleDetailModal: React.FC<ModalProps> = ({ module, onClose }) => {
           )}
 
         </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-[#1C2533] bg-[#0B101A]">
-          <button 
-            onClick={onClose}
-            className="w-full py-3.5 rounded-xl font-bold text-white transition-colors"
-            style={{ backgroundColor: COLORS.Primary }}
-          >
-            Concluir Leitura
-          </button>
-        </div>
-
+        {/* Footer Removed */}
       </div>
     </div>
   );
