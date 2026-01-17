@@ -23,7 +23,7 @@ export interface LearningModule {
 }
 
 export const LEARNING_MODULES: LearningModule[] = [
-  // --- BLOQUEIO TÉCNICO (Existing, adapted to Cyberpunk style) ---
+  // --- BLOQUEIO TÉCNICO (Updated: Purple Neon Theme) ---
   {
     id: 'dns_shield',
     title: 'O Escudo Invisível (DNS)',
@@ -32,7 +32,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'shield',
     gradientStart: '#0B101A',
     gradientEnd: '#112240',
-    accentColor: '#00E5FF', // Cyan Neon
+    accentColor: '#A78BFA', // Lilac/Cyan substitute
     intro: 'O DNS Family da Cloudflare bloqueia requisições a sites adultos na raiz da rede. É uma camada de segurança invisível, gratuita e que não exige a instalação de aplicativos pesados.',
     androidSteps: [
       { text: 'Abra as Configurações do seu Android.' },
@@ -66,7 +66,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'document',
     gradientStart: '#000000',
     gradientEnd: '#1F2937',
-    accentColor: '#64748B', // Grey Blue
+    accentColor: '#9CA3AF', // Grey
     intro: 'O efeito Coolidge é um fenômeno biológico visto em quase todas as espécies de mamíferos, onde os machos exibem um desejo sexual renovado sempre que uma nova fêmea é introduzida, mesmo após a exaustão sexual com parceiros anteriores.'
   },
   {
@@ -77,7 +77,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'document',
     gradientStart: '#000000',
     gradientEnd: '#1F2937',
-    accentColor: '#64748B',
+    accentColor: '#9CA3AF',
     intro: 'O excesso de estímulos supranormais causa uma regulação negativa (downregulation) nos receptores D2. O resultado é a anedonia: a incapacidade de sentir prazer nas atividades cotidianas sutis.'
   },
   {
@@ -88,20 +88,20 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'document',
     gradientStart: '#000000',
     gradientEnd: '#1F2937',
-    accentColor: '#64748B',
+    accentColor: '#9CA3AF',
     intro: 'Muitas vezes, o que interpretamos como "alta libido" é na verdade o sistema de recompensa do cérebro gritando por uma dose de dopamina para aliviar o estresse ou o tédio, não uma necessidade sexual biológica genuína.'
   },
 
-  // --- CATEGORIA: PODCASTS (Deep Midnight Blue) ---
+  // --- CATEGORIA: PODCASTS (Deep Purple Gradient) ---
   {
     id: 'pod_rescue',
     title: 'Protocolo de Resgate: Dia 1',
     subtitle: 'O que fazer nas primeiras 24h de abstinência.',
     category: 'PODCASTS',
     icon: 'mic',
-    gradientStart: '#020617',
-    gradientEnd: '#172554',
-    accentColor: '#3B82F6', // Royal Blue
+    gradientStart: '#0F0A15',
+    gradientEnd: '#2E1065',
+    accentColor: '#8B5CF6', // Purple
     intro: 'Um guia de áudio passo a passo para sobreviver às primeiras e mais difíceis 24 horas. Foco em hidratação, exercício intenso e remoção de gatilhos ambientais.'
   },
   {
@@ -110,13 +110,13 @@ export const LEARNING_MODULES: LearningModule[] = [
     subtitle: 'Neurocientistas explicam o encolhimento do córtex.',
     category: 'PODCASTS',
     icon: 'mic',
-    gradientStart: '#020617',
-    gradientEnd: '#172554',
-    accentColor: '#3B82F6',
+    gradientStart: '#0F0A15',
+    gradientEnd: '#2E1065',
+    accentColor: '#8B5CF6',
     intro: 'Uma discussão profunda sobre os estudos que mostram a redução de massa cinzenta no córtex pré-frontal em usuários crônicos e como a neuroplasticidade permite a reversão desse quadro.'
   },
 
-  // --- CATEGORIA: VÍDEOS (Cyberpunk/Teal) ---
+  // --- CATEGORIA: VÍDEOS (Lilac/Teal) ---
   {
     id: 'vid_huberman',
     title: 'Huberman: Controle de Impulso',
@@ -125,7 +125,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'play',
     gradientStart: '#0B101A',
     gradientEnd: '#112240',
-    accentColor: '#00E5FF', // Neon Cyan
+    accentColor: '#A78BFA', // Lilac
     intro: 'Dr. Andrew Huberman explica mecanismos visuais, como o foco panorâmico vs. foco focal, para desativar o sistema de alerta do cérebro e reduzir a impulsividade no momento do gatilho.'
   },
   {
@@ -136,7 +136,7 @@ export const LEARNING_MODULES: LearningModule[] = [
     icon: 'play',
     gradientStart: '#0B101A',
     gradientEnd: '#112240',
-    accentColor: '#00E5FF',
+    accentColor: '#A78BFA',
     intro: 'Uma análise visual do Loop do Hábito de Charles Duhigg. Aprenda que você não elimina um hábito, você o substitui mantendo o gatilho e a recompensa, mas alterando a rotina.'
   }
 ];

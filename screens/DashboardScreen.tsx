@@ -158,7 +158,7 @@ export const DashboardScreen: React.FC = () => {
             <h3 className="text-[10px] font-bold uppercase tracking-widest mb-1 opacity-70" style={{ color: personality.color }}>
               {personality.title}
             </h3>
-            <div className="flex justify-between items-end border-b border-[#1C2533] pb-4 w-full">
+            <div className="flex justify-between items-end border-b pb-4 w-full" style={{ borderColor: COLORS.Border }}>
                <p className="text-sm font-medium leading-relaxed text-white max-w-[70%]">
                  "{personality.text}"
                </p>
@@ -172,7 +172,7 @@ export const DashboardScreen: React.FC = () => {
           {/* 2. NEURO DEBUG (GATILHOS) */}
           <NeuroDebugCard />
 
-          {/* TRIGGER BUTTON (UI UPDATE: Red Dashed Border, Blue Text) */}
+          {/* TRIGGER BUTTON (UI UPDATE: Red Dashed Border, Purple Text) */}
           <div className="w-full mb-6">
             <Button 
               variant="outline"

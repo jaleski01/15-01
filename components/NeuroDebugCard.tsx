@@ -30,7 +30,7 @@ export const NeuroDebugCard: React.FC = () => {
     <div className="flex flex-col w-full my-5">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>
+        <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.8)]"></div>
         <h3 
           className="text-[10px] font-bold uppercase tracking-widest opacity-80"
           style={{ color: COLORS.TextSecondary }}

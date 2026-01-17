@@ -58,7 +58,7 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
                   onClick={() => setEmotion(item)}
                   className={`p-3 rounded-xl border text-sm font-medium transition-all ${
                     emotion === item 
-                      ? 'bg-blue-600/20 border-blue-500 text-white shadow-[0_0_10px_rgba(59,130,246,0.3)]' 
+                      ? 'bg-violet-600/20 border-violet-500 text-white shadow-[0_0_10px_rgba(139,92,246,0.3)]' 
                       : 'bg-[#1F2937] border-[#374151] text-gray-400 hover:bg-[#374151]'
                   }`}
                 >
@@ -79,7 +79,7 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
                   onClick={() => setContext(item)}
                   className={`p-3 rounded-xl border text-sm font-medium transition-all ${
                     context === item 
-                      ? 'bg-blue-600/20 border-blue-500 text-white shadow-[0_0_10px_rgba(59,130,246,0.3)]' 
+                      ? 'bg-violet-600/20 border-violet-500 text-white shadow-[0_0_10px_rgba(139,92,246,0.3)]' 
                       : 'bg-[#1F2937] border-[#374151] text-gray-400 hover:bg-[#374151]'
                   }`}
                 >
@@ -136,13 +136,13 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
 
       {/* Modal Card */}
       <div 
-        className="w-full max-w-sm bg-[#0B101A] border border-[#1C2533] rounded-2xl shadow-2xl relative overflow-hidden flex flex-col"
+        className="w-full max-w-sm bg-[#0F0A15] border border-[#2E243D] rounded-2xl shadow-2xl relative overflow-hidden flex flex-col"
         style={{ maxHeight: '85vh' }}
       >
         {/* Progress Bar */}
-        <div className="w-full h-1 bg-[#1C2533]">
+        <div className="w-full h-1 bg-[#2E243D]">
           <div 
-            className="h-full bg-blue-500 transition-all duration-300"
+            className="h-full bg-violet-500 transition-all duration-300"
             style={{ width: `${(step / 3) * 100}%` }}
           />
         </div>
@@ -161,7 +161,7 @@ export const TriggerModal: React.FC<TriggerModalProps> = ({ onClose }) => {
           {renderStepContent()}
         </div>
 
-        <div className="p-4 border-t border-[#1C2533]">
+        <div className="p-4 border-t border-[#2E243D]">
           {step < 3 ? (
             <Button 
               onClick={handleNext}

@@ -160,8 +160,8 @@ export const ProfileScreen: React.FC = () => {
         
         {/* --- 1. TOPO: HEADER --- */}
         <div className="flex flex-col items-center mb-8">
-          <div className="p-1 rounded-full border-2 border-[#007AFF] mb-3 shadow-[0_0_15px_rgba(0,122,255,0.4)]">
-             <div className="w-16 h-16 rounded-full bg-[#1C2533] flex items-center justify-center overflow-hidden">
+          <div className="p-1 rounded-full border-2 border-[#8B5CF6] mb-3 shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+             <div className="w-16 h-16 rounded-full bg-[#2E243D] flex items-center justify-center overflow-hidden">
                 {/* User Avatar Placeholder */}
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -190,14 +190,14 @@ export const ProfileScreen: React.FC = () => {
                   className={`
                     relative p-4 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all duration-300
                     ${isUnlocked 
-                      ? 'bg-[#007AFF]/10 border-[#007AFF]/50 shadow-[0_0_10px_rgba(0,122,255,0.1)]' 
-                      : 'bg-[#1A1A1A] border-[#1C2533] opacity-40 grayscale'
+                      ? 'bg-[#8B5CF6]/10 border-[#8B5CF6]/50 shadow-[0_0_10px_rgba(139,92,246,0.1)]' 
+                      : 'bg-[#1A1A1A] border-[#2E243D] opacity-40 grayscale'
                     }
                   `}
                 >
                   {/* Ícone com Círculo de Fundo */}
-                  <div className={`p-2 rounded-full ${isUnlocked ? 'bg-[#007AFF]/20' : 'bg-[#2a2a2a]'}`}>
-                    <svg className={`w-6 h-6 ${isUnlocked ? 'text-[#007AFF]' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className={`p-2 rounded-full ${isUnlocked ? 'bg-[#8B5CF6]/20' : 'bg-[#2a2a2a]'}`}>
+                    <svg className={`w-6 h-6 ${isUnlocked ? 'text-[#8B5CF6]' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       {getRankIcon(rank.icon)}
                     </svg>
                   </div>
@@ -258,10 +258,10 @@ export const ProfileScreen: React.FC = () => {
         </div>
 
         {/* --- 4. BLOCO: CONTA (RODAPÉ) --- */}
-        <div className="w-full mt-auto pt-6 border-t border-[#1C2533]">
+        <div className="w-full mt-auto pt-6 border-t border-[#2E243D]">
            <div className="flex flex-col gap-4">
              {auth.currentUser?.email && (
-               <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#1C2533] bg-[#0B101A]">
+               <div className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#2E243D] bg-[#0F0A15]">
                   <span className="text-xs text-gray-500">Logado como</span>
                   <span className="text-xs font-medium text-white truncate max-w-[180px]">
                     {auth.currentUser.email}
@@ -289,7 +289,7 @@ export const ProfileScreen: React.FC = () => {
       {/* --- MODAL 1: CONFIRMATION --- */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-sm bg-[#0B101A] border border-red-900/30 rounded-2xl p-6 shadow-2xl">
+          <div className="w-full max-w-sm bg-[#0F0A15] border border-red-900/30 rounded-2xl p-6 shadow-2xl">
             <div className="flex flex-col items-center text-center mb-6">
               <div className="w-12 h-12 rounded-full bg-red-900/20 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -326,8 +326,8 @@ export const ProfileScreen: React.FC = () => {
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-black/95 animate-fadeIn">
           <div className="w-full max-w-sm flex flex-col items-center text-center">
             
-            <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mb-8 border border-blue-500/30 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
-               <svg className="w-10 h-10 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-20 h-20 rounded-full bg-violet-500/10 flex items-center justify-center mb-8 border border-violet-500/30 shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+               <svg className="w-10 h-10 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                </svg>
             </div>
@@ -343,7 +343,7 @@ export const ProfileScreen: React.FC = () => {
               </p>
             </div>
 
-            <Button onClick={finishProcess} className="w-full bg-blue-600 hover:bg-blue-500">
+            <Button onClick={finishProcess} className="w-full bg-violet-600 hover:bg-violet-500">
               Voltar ao Foco (Dashboard)
             </Button>
           </div>

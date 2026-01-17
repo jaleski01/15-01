@@ -255,14 +255,14 @@ export const ProgressScreen: React.FC = () => {
           </div>
 
           {/* RANGE SELECTOR (TABS) */}
-          <div className="w-full flex p-1 rounded-xl mb-6 bg-[#1F2937]/30 border border-[#1C2533]">
+          <div className="w-full flex p-1 rounded-xl mb-6 bg-[#1F2937]/30 border border-[#2E243D]">
             {RANGES.map((range) => (
               <button
                 key={range}
                 onClick={() => setSelectedRange(range)}
                 className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all duration-200 ${
                   selectedRange === range 
-                    ? 'bg-[#007AFF] text-white shadow-lg' 
+                    ? 'bg-[#8B5CF6] text-white shadow-lg' 
                     : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
@@ -273,15 +273,15 @@ export const ProgressScreen: React.FC = () => {
 
           {/* KPI CARDS - Grid Responsivo */}
           <div className="grid grid-cols-2 gap-4 mb-8 w-full">
-            <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden w-full">
+            <div className="p-4 rounded-xl border border-[#2E243D] bg-[#0F0A15] flex flex-col items-center justify-center relative overflow-hidden w-full">
               <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Média</span>
               <span className={`text-3xl font-bold z-10 ${stats.average >= 80 ? 'text-[#10B981]' : 'text-white'}`}>
                 {stats.average}%
               </span>
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#007AFF]/10 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#8B5CF6]/10 rounded-full blur-xl"></div>
             </div>
             
-            <div className="p-4 rounded-xl border border-[#1C2533] bg-[#0B101A] flex flex-col items-center justify-center relative overflow-hidden w-full">
+            <div className="p-4 rounded-xl border border-[#2E243D] bg-[#0F0A15] flex flex-col items-center justify-center relative overflow-hidden w-full">
               <span className="text-[10px] uppercase font-bold text-gray-500 mb-1 z-10">Dias Perfeitos</span>
               <span className="text-3xl font-bold text-white z-10">
                 {stats.perfectDays}
@@ -298,7 +298,7 @@ export const ProgressScreen: React.FC = () => {
 
             {loading ? (
                <div className="w-full h-[200px] flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-[#007AFF] border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-8 h-8 border-4 border-[#8B5CF6] border-t-transparent rounded-full animate-spin"></div>
                </div>
             ) : chartData.length === 0 ? (
               <div className="w-full h-[200px] flex flex-col items-center justify-center text-center opacity-50 border border-dashed border-gray-800 rounded-xl">
@@ -312,7 +312,7 @@ export const ProgressScreen: React.FC = () => {
                 className="w-full overflow-x-auto pb-4 scrollbar-hide"
               >
                 <div 
-                  className="flex items-end min-w-full gap-3 border-b border-[#1C2533] relative px-2"
+                  className="flex items-end min-w-full gap-3 border-b border-[#2E243D] relative px-2"
                   style={{ height: '200px' }} 
                 >
                   {/* Background Grid Lines */}
@@ -339,7 +339,7 @@ export const ProgressScreen: React.FC = () => {
                             }}
                           >
                             {item.value === 100 && (
-                                <div className="absolute inset-0 bg-[#007AFF] blur-[6px] opacity-50"></div>
+                                <div className="absolute inset-0 bg-[#8B5CF6] blur-[6px] opacity-50"></div>
                             )}
                           </div>
                         </div>
@@ -384,7 +384,7 @@ export const ProgressScreen: React.FC = () => {
                 </div>
 
                 {/* Ranking List */}
-                <div className="bg-[#0B101A] rounded-xl border border-[#1C2533] p-4 w-full">
+                <div className="bg-[#0F0A15] rounded-xl border border-[#2E243D] p-4 w-full">
                   <h5 className="text-[10px] uppercase text-gray-500 font-bold mb-3">Top Gatilhos Recorrentes</h5>
                   <div className="flex flex-col gap-3 w-full">
                     {triggerInsight.ranking.map((item, idx) => (
@@ -402,7 +402,7 @@ export const ProgressScreen: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="w-full p-6 rounded-xl border border-dashed border-[#1C2533] flex flex-col items-center justify-center text-center">
+              <div className="w-full p-6 rounded-xl border border-dashed border-[#2E243D] flex flex-col items-center justify-center text-center">
                 <p className="text-sm text-gray-400 mb-1">Nenhum gatilho registrado.</p>
                 <p className="text-xs text-gray-600">Use o botão "Registrar Gatilho" na Home quando sentir vontade.</p>
               </div>

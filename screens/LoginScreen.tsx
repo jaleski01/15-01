@@ -116,7 +116,7 @@ export const LoginScreen: React.FC = () => {
           <div className="space-y-1">
             <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Email</label>
             <div 
-              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
+              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-violet-500"
               style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
             >
               <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -136,7 +136,7 @@ export const LoginScreen: React.FC = () => {
           <div className="space-y-1">
             <label className="text-xs font-medium ml-1" style={{ color: COLORS.TextSecondary }}>Senha</label>
             <div 
-              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-blue-500"
+              className="flex items-center rounded-xl px-4 py-3.5 transition-colors focus-within:ring-1 focus-within:ring-violet-500"
               style={{ backgroundColor: COLORS.Surface, border: `1px solid ${COLORS.Border}` }}
             >
               <svg className="w-5 h-5 mr-3" style={{ color: COLORS.TextSecondary }} fill="none" stroke="currentColor" viewBox="0 0 24 24">

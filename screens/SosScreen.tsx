@@ -79,10 +79,10 @@ export const SosScreen: React.FC = () => {
   };
 
   return (
-    // Alterado de bg-black para a cor de Surface (#0B101A) para ser mais calmante
-    <Wrapper centerContent className="bg-[#0B101A]">
-      {/* Background Ambience - Ajustado gradiente para fundir com o azul escuro */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#00E5FF10] via-[#0B101A] to-[#0B101A] pointer-events-none" />
+    // Alterado de bg-black para a cor de Surface (#0F0A15) para ser mais calmante
+    <Wrapper centerContent className="bg-[#0F0A15]">
+      {/* Background Ambience - Ajustado gradiente para fundir com o roxo escuro */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#A78BFA10] via-[#0F0A15] to-[#0F0A15] pointer-events-none" />
 
       {/* Título 'S.O.S' REMOVIDO para limpar a interface */}
 
@@ -95,7 +95,7 @@ export const SosScreen: React.FC = () => {
           {/* Animated Circle Container */}
           {/* Reduced size: w-40 (160px) */}
           <div 
-            className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-2 flex items-center justify-center relative shadow-[0_0_40px_rgba(0,229,255,0.2)]"
+            className="w-40 h-40 sm:w-48 sm:h-48 rounded-full border-2 flex items-center justify-center relative shadow-[0_0_40px_rgba(167,139,250,0.2)]"
             style={{ 
               borderColor: COLORS.Cyan,
               ...transitionStyle
@@ -128,7 +128,7 @@ export const SosScreen: React.FC = () => {
         </p>
 
         {/* --- SECTION: PRACTICAL TIPS --- */}
-        <div className="w-full max-w-xs bg-[#0B101A]/50 border border-[#1C2533] rounded-xl p-5 backdrop-blur-sm animate-fadeIn">
+        <div className="w-full max-w-xs bg-[#0F0A15]/50 border border-[#2E243D] rounded-xl p-5 backdrop-blur-sm animate-fadeIn">
           <h3 className="text-[10px] font-bold uppercase tracking-widest mb-4 text-center text-gray-400">
             PRÓXIMOS PASSOS PARA QUEBRAR O CICLO:
           </h3>
