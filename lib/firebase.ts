@@ -1,8 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/analytics';
+import 'firebase/compat/messaging';
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from 'firebase/analytics';
-import { getMessaging, getToken } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCOX18n01dJ7XNnwKpk3eZliUJ_ZZ8Uyrw",
@@ -14,31 +14,37 @@ const firebaseConfig = {
   measurementId: "G-SZJ7DMD9NC"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const analytics = getAnalytics(app);
-export const messaging = getMessaging(app);
+export const auth = app.auth();
+export const db = getFirestore();
+export const analytics = app.analytics();
+export const messaging = firebase.messaging();
 
 export const requestForToken = async () => {
   try {
-    if (typeof window !== 'undefined' && 'Notification' in window) {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        const registration = await navigator.serviceWorker.ready;
-        const currentToken = await getToken(messaging, { 
-          vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
-          serviceWorkerRegistration: registration 
-        });
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      
+      // CRÍTICO: Reutiliza o SW do PWA para evitar conflito de escopo
+      const registration = await navigator.serviceWorker.ready;
 
-        if (currentToken) {
-          return currentToken;
-        }
+      const currentToken = await messaging.getToken({ 
+        vapidKey: 'BIfzJbY9Esj4NVlIfbQs9qKU58y0CBAoxfpAGR0AzMXVKG6QygXVzKsxghzp7qYcR0SZuvR3UUZMr-1ifwese8s',
+        serviceWorkerRegistration: registration 
+      });
+
+      if (currentToken) {
+        console.log('Token FCM obtido:', currentToken);
+        return currentToken;
+      } else {
+        console.log('Nenhum token de registro disponível.');
       }
+    } else {
+      console.log('Permissão de notificação negada.');
     }
   } catch (err) {
-    console.log('Erro token:', err);
+    console.log('Um erro ocorreu ao recuperar o token.', err);
   }
   return null;
 };

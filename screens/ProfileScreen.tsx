@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Wrapper } from '../components/Wrapper';
 import { Button } from '../components/Button';
-import { signOut } from 'firebase/auth';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
+import { doc, updateDoc, increment, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { COLORS, Routes } from '../types';
 
@@ -48,7 +47,7 @@ export const ProfileScreen: React.FC = () => {
           const snap = await getDoc(docRef);
           if (snap.exists()) {
              const data = snap.data();
-             calculateStreak(data?.current_streak_start);
+             calculateStreak(data.current_streak_start);
              // Atualiza cache
              localStorage.setItem('user_profile', JSON.stringify(data));
           }
@@ -77,7 +76,7 @@ export const ProfileScreen: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await auth.signOut();
       navigate(Routes.LOGIN);
     } catch (error) {
       console.error("Logout failed", error);
@@ -95,18 +94,13 @@ export const ProfileScreen: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // 1. Update Firestore (Modular)
-      // Since 'increment' is not available in lite, we must read then write.
-      const nowISO = new Date().toISOString();
+      // 1. Update Firestore
       const userRef = doc(db, "users", user.uid);
-      
-      // Read current state
-      const snap = await getDoc(userRef);
-      const currentCount = snap.exists() ? (snap.data().relapse_count || 0) : 0;
+      const nowISO = new Date().toISOString();
       
       await updateDoc(userRef, {
         current_streak_start: nowISO,
-        relapse_count: currentCount + 1,
+        relapse_count: increment(1),
         last_relapse_date: nowISO
       });
 
