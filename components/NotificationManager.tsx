@@ -14,18 +14,19 @@ export const NotificationManager: React.FC = () => {
   }, []);
 
   const handleActivate = async () => {
-    const token = await requestForToken();
-    if (token && auth.currentUser) {
-      // Salva o token no perfil do usuário para podermos enviar pushs depois
-      try {
+    try {
+      const token = await requestForToken();
+      
+      if (token && auth.currentUser) {
+        // Tenta salvar o token, mas não impede o fechamento do banner se falhar
         const userRef = doc(db, 'users', auth.currentUser.uid);
         await updateDoc(userRef, { fcm_token: token });
-        setShowBanner(false);
-      } catch (e) {
-        console.error("Erro ao salvar token", e);
       }
-    } else if (token) {
-        setShowBanner(false); // Token gerado mas usuario deslogado
+    } catch (e) {
+      console.error("Erro ao processar ativação de alertas:", e);
+    } finally {
+      // Garante que o banner feche em qualquer cenário (Sucesso, Erro ou Permissão Negada)
+      setShowBanner(false);
     }
   };
 
