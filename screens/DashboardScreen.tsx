@@ -8,7 +8,7 @@ import { StreakTimer } from '../components/StreakTimer';
 import { NeuroDebugCard } from '../components/NeuroDebugCard';
 import { DailyHabits } from '../components/DailyHabits';
 import { TriggerModal } from '../components/TriggerModal';
-import { InstallPwaPrompt } from '../components/InstallPwaPrompt';
+import { ShortcutPrompt } from '../components/ShortcutPrompt';
 import { COLORS, Routes } from '../types';
 
 interface UserProfile {
@@ -210,8 +210,8 @@ export const DashboardScreen: React.FC = () => {
         <TriggerModal onClose={() => setIsTriggerModalOpen(false)} />
       )}
 
-      {/* PWA INSTALL PROMPT */}
-      <InstallPwaPrompt />
+      {/* SHORTCUT PROMPT */}
+      <ShortcutPrompt />
     </Wrapper>
   );
 };
