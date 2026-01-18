@@ -8,6 +8,7 @@ import { StreakTimer } from '../components/StreakTimer';
 import { NeuroDebugCard } from '../components/NeuroDebugCard';
 import { DailyHabits } from '../components/DailyHabits';
 import { TriggerModal } from '../components/TriggerModal';
+import { InstallPwaPrompt } from '../components/InstallPwaPrompt';
 import { COLORS, Routes } from '../types';
 
 interface UserProfile {
@@ -111,8 +112,6 @@ export const DashboardScreen: React.FC = () => {
   // --- RENDER ---
   if (isLoading) {
     return (
-      // APLICAÇÃO DA CORREÇÃO DE CENTRALIZAÇÃO
-      // Equivalente Web para: flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000000'
       <div className="flex-1 h-[100dvh] w-full flex flex-col items-center justify-center bg-black">
         <div className="w-12 h-12 rounded-full border-4 border-t-transparent animate-spin mb-4" style={{ borderColor: COLORS.Primary, borderTopColor: 'transparent' }} />
         <span className="text-xs font-bold tracking-widest animate-pulse" style={{ color: COLORS.TextSecondary }}>
@@ -124,20 +123,7 @@ export const DashboardScreen: React.FC = () => {
 
   return (
     <Wrapper noPadding> 
-      {/* 
-        ESTRUTURA CORRIGIDA:
-        1. ScrollView Viewport (flex-1, overflow-y-auto, w-full):
-           - Ocupa todo o espaço vertical e horizontal disponível.
-           - Define a "janela" de rolagem.
-      */}
       <div className="flex-1 w-full h-full overflow-y-auto scrollbar-hide bg-black">
-        
-        {/* 
-           2. Content Container (w-full, px-5):
-           - Define a largura do conteúdo como 100% da viewport.
-           - Aplica o PADDING (px-5 = 20px) aqui, garantindo o respiro lateral.
-           - paddingBottom (pb-32) para o conteúdo não ficar atrás do Hub.
-        */}
         <div className="w-full max-w-full px-5 pt-6 pb-32 flex flex-col items-center">
           
           {/* 1. STREAK TIMER */}
@@ -172,7 +158,7 @@ export const DashboardScreen: React.FC = () => {
           {/* 2. NEURO DEBUG (GATILHOS) */}
           <NeuroDebugCard />
 
-          {/* TRIGGER BUTTON (UI UPDATE: Red Dashed Border, Purple Text) */}
+          {/* TRIGGER BUTTON */}
           <div className="w-full mb-6">
             <Button 
               variant="outline"
@@ -223,6 +209,9 @@ export const DashboardScreen: React.FC = () => {
       {isTriggerModalOpen && (
         <TriggerModal onClose={() => setIsTriggerModalOpen(false)} />
       )}
+
+      {/* PWA INSTALL PROMPT */}
+      <InstallPwaPrompt />
     </Wrapper>
   );
 };
